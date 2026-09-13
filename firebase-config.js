@@ -19,6 +19,7 @@ import {
   doc, 
   getDoc, 
   setDoc,
+  addDoc,
   collection,
   getDocs,
   updateDoc,
@@ -77,6 +78,9 @@ window.FirebaseAuth = {
   // Sign Out
   logout: () => signOut(auth),
 
+  // Add Firestore Inquiry / Document Helper
+  addDoc: (colRef, data) => addDoc(colRef, data),
+
   // Current User getter
   getCurrentUser: () => auth.currentUser
 };
@@ -92,6 +96,7 @@ export {
   doc,
   getDoc,
   setDoc,
+  addDoc,
   collection,
   getDocs,
   updateDoc,

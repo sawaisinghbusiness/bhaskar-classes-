@@ -232,6 +232,7 @@ function initAdminFirebaseListener() {
  * Real-time Firestore Student Management for Admin
  */
 let unsubscribeStudents = null;
+let unsubscribeInquiries = null;
 let studentsListCache = [];
 
 function initStudentsManagement() {
@@ -252,7 +253,14 @@ function initStudentsManagement() {
     };
   });
 
+  // Modal Form Submission
+  const manageModalForm = document.getElementById('adminManageStudentForm');
+  if (manageModalForm) {
+    manageModalForm.onsubmit = handleSaveStudentFromModal;
+  }
+
   loadStudentsRealtime();
+  loadInquiriesRealtime();
 }
 
 function loadStudentsRealtime() {
@@ -280,7 +288,7 @@ function loadStudentsRealtime() {
       if (tableBody) {
         tableBody.innerHTML = `
           <tr>
-            <td colspan="7" style="text-align: center; color: #dc2626; padding: 1.5rem;">
+            <td colspan="6" style="text-align: center; color: #dc2626; padding: 1.5rem;">
               <i class="fa-solid fa-circle-exclamation mr-1"></i> Firestore से छात्रों का डेटा लोड करने में त्रुटि आई: ${error.message}
             </td>
           </tr>
@@ -292,6 +300,83 @@ function loadStudentsRealtime() {
   }
 }
 
+// Real-time listener for Firestore inquiries (Website leads)
+function loadInquiriesRealtime() {
+  const inquiryTbody = document.getElementById('adminInquiryTableBody');
+  const countBadge = document.getElementById('adminInquiryCount');
+
+  try {
+    const inquiriesCol = collection(db, "inquiries");
+    if (unsubscribeInquiries) unsubscribeInquiries();
+
+    unsubscribeInquiries = onSnapshot(inquiriesCol, (snapshot) => {
+      const inquiriesList = [];
+      snapshot.forEach(doc => {
+        inquiriesList.push({ id: doc.id, ...doc.data() });
+      });
+
+      // Sort newest first
+      inquiriesList.sort((a, b) => {
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return timeB - timeA;
+      });
+
+      if (countBadge) {
+        countBadge.innerText = inquiriesList.length;
+      }
+
+      if (inquiryTbody) {
+        if (inquiriesList.length === 0) {
+          inquiryTbody.innerHTML = `
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 2rem; color: var(--color-text-muted);">
+                वर्तमान में कोई नई पूछताछ नहीं है।
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        inquiryTbody.innerHTML = inquiriesList.map(lead => {
+          const dateStr = lead.date || (lead.createdAt ? new Date(lead.createdAt).toLocaleDateString('hi-IN') : 'आज');
+          const cleanPhone = (lead.phone || '').replace(/\D/g, '');
+          return `
+            <tr>
+              <td>
+                <div style="font-weight: 700; color: var(--color-primary);">${lead.name || 'अज्ञात'}</div>
+                ${lead.message ? `<div style="font-size: 0.75rem; color: #64748b;">"${lead.message}"</div>` : ''}
+              </td>
+              <td>
+                <strong style="color: #334155;">${lead.phone || '--'}</strong>
+              </td>
+              <td>
+                <span style="font-size: 0.8rem; background: #FEF3C7; color: #92400E; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
+                  ${lead.course || 'सामान्य पूछताछ'}
+                </span>
+              </td>
+              <td>${lead.city || 'बाड़मेर'}</td>
+              <td>${dateStr}</td>
+              <td style="text-align: right;">
+                <a href="https://wa.me/91${cleanPhone}?text=नमस्ते%20${encodeURIComponent(lead.name || '')},%20भास्कर%20क्लासेज%20बाड़मेर%20से%20संपर्क%20कर%20रहे%20हैं।" target="_blank" class="btn btn-sm btn-outline" style="color: #16a34a; border-color: #bbf7d0;">
+                  <i class="fa-brands fa-whatsapp"></i> चैट
+                </a>
+                <a href="tel:${cleanPhone}" class="btn btn-sm btn-outline" style="margin-left: 0.25rem;">
+                  <i class="fa-solid fa-phone"></i> कॉल
+                </a>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }, (err) => {
+      console.warn("Inquiries snapshot note:", err.message);
+    });
+  } catch (e) {
+    console.warn("Could not set up inquiries listener:", e);
+  }
+}
+
 function renderStudentsTable(students) {
   const tableBody = document.getElementById('adminStudentsTableBody');
   if (!tableBody) return;
@@ -299,7 +384,7 @@ function renderStudentsTable(students) {
   if (!students || students.length === 0) {
     tableBody.innerHTML = `
       <tr>
-        <td colspan="7" style="text-align: center; padding: 2.5rem; color: var(--color-text-muted);">
+        <td colspan="6" style="text-align: center; padding: 2.5rem; color: var(--color-text-muted);">
           <i class="fa-solid fa-user-clock" style="font-size: 2rem; margin-bottom: 0.5rem; display: block; color: #94A3B8;"></i>
           अभी तक कोई विद्यार्थी पंजीकृत नहीं हुआ है। जब छात्र रजिस्ट्रेशन करेंगे, वे यहाँ स्वतः दिखाई देंगे।
         </td>
@@ -314,58 +399,54 @@ function renderStudentsTable(students) {
     const email = student.email || '--';
     const phone = student.phone || 'उपलब्ध नहीं';
     const goal = student.targetExam || '2nd Grade हिंदी';
-    const date = student.createdAt ? new Date(student.createdAt).toLocaleDateString('hi-IN') : '--';
     const hasEbooks = !!student.hasEbooksAccess;
     const hasTests = !!student.hasTestSeriesAccess;
 
     // Latest book order details
     const orders = Array.isArray(student.bookOrders) && student.bookOrders.length > 0 ? student.bookOrders : [];
-    const latestOrder = orders.length > 0 ? orders[0] : {
-      orderId: 'BK-' + uid.substring(0, 4).toUpperCase(),
-      bookTitle: 'राजस्थान राजनीतिक व्यवस्था / हिंदी साहित्य',
-      status: 'ऑर्डर प्राप्त',
-      trackingNo: '',
-      address: student.deliveryAddress || student.city || 'बाड़मेर'
+    const latestOrder = orders.length > 0 ? orders[orders.length - 1] : {
+      bookTitle: 'कोई पुस्तक नहीं',
+      status: 'कोई ऑर्डर नहीं',
+      trackingNo: ''
     };
+
+    const isDelivered = latestOrder.status && (latestOrder.status.includes('डिस्पैच') || latestOrder.status.includes('डिलीवर'));
+    const badgeBg = isDelivered ? '#DCFCE7' : (latestOrder.status === 'कोई ऑर्डर नहीं' ? '#F1F5F9' : '#FEF3C7');
+    const badgeColor = isDelivered ? '#15803D' : (latestOrder.status === 'कोई ऑर्डर नहीं' ? '#64748B' : '#B45309');
 
     return `
       <tr id="row-student-${uid}">
         <td>
           <div style="font-weight: 700; color: var(--color-primary); font-size: 0.95rem;">${name}</div>
           <div style="font-size: 0.75rem; color: var(--color-text-muted); font-family: monospace;">${email}</div>
-          <div style="font-size: 0.7rem; color: #64748B;">पंजीयन: ${date}</div>
+          <div style="font-size: 0.7rem; color: #64748B;">UID: <code>${uid.substring(0, 8)}</code></div>
         </td>
         <td>
           <div style="font-weight: 600; color: #334155; font-size: 0.85rem;"><i class="fa-solid fa-phone mr-1" style="color: var(--color-primary); font-size: 0.75rem;"></i> ${phone}</div>
           <span style="font-size: 0.72rem; color: #b45309; background: #fef3c7; padding: 0.15rem 0.4rem; border-radius: 4px; display: inline-block; margin-top: 0.2rem;">${goal}</span>
         </td>
         <td>
-          <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-            <input type="checkbox" id="ebooks-${uid}" ${hasEbooks ? 'checked' : ''} style="width: 18px; height: 18px; accent-color: #10B981; cursor: pointer;">
-            <span style="font-size: 0.8rem; font-weight: 600; color: ${hasEbooks ? '#059669' : '#94A3B8'};">${hasEbooks ? 'एक्सेस चालू' : 'बंद'}</span>
-          </label>
+          <div style="font-weight: 600; color: #1e293b; font-size: 0.85rem;">${latestOrder.bookTitle || 'कोई पुस्तक नहीं'}</div>
+          ${latestOrder.trackingNo ? `<div style="font-size: 0.72rem; color: #0284c7; font-family: monospace;">ट्रैकिंग: <strong>${latestOrder.trackingNo}</strong></div>` : ''}
         </td>
         <td>
-          <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-            <input type="checkbox" id="tests-${uid}" ${hasTests ? 'checked' : ''} style="width: 18px; height: 18px; accent-color: #10B981; cursor: pointer;">
-            <span style="font-size: 0.8rem; font-weight: 600; color: ${hasTests ? '#059669' : '#94A3B8'};">${hasTests ? 'एक्सेस चालू' : 'बंद'}</span>
-          </label>
+          <span style="font-size: 0.78rem; font-weight: 700; background: ${badgeBg}; color: ${badgeColor}; padding: 0.2rem 0.6rem; border-radius: 4px; display: inline-block;">
+            <i class="fa-solid ${isDelivered ? 'fa-check' : 'fa-clock'} mr-1"></i> ${latestOrder.status || 'कोई ऑर्डर नहीं'}
+          </span>
         </td>
         <td>
-          <select id="delivery-status-${uid}" class="form-control" style="font-size: 0.78rem; padding: 4px 8px; height: auto;">
-            <option value="कोई ऑर्डर नहीं" ${latestOrder.status === 'कोई ऑर्डर नहीं' ? 'selected' : ''}>कोई ऑर्डर नहीं</option>
-            <option value="ऑर्डर प्राप्त (Pending)" ${latestOrder.status && latestOrder.status.includes('प्राप्त') ? 'selected' : ''}>ऑर्डर प्राप्त</option>
-            <option value="पैकिंग प्रक्रिया में" ${latestOrder.status && latestOrder.status.includes('पैकिंग') ? 'selected' : ''}>पैकिंग प्रक्रिया में</option>
-            <option value="स्पीड पोस्ट डिस्पैच पूर्ण" ${latestOrder.status && latestOrder.status.includes('डिस्पैच') ? 'selected' : ''}>स्पीड पोस्ट डिस्पैच पूर्ण</option>
-            <option value="डिलीवर हो गया (Delivered)" ${latestOrder.status && latestOrder.status.includes('डिलीवर') ? 'selected' : ''}>डिलीवर हो गया</option>
-          </select>
-        </td>
-        <td>
-          <input type="text" id="tracking-${uid}" class="form-control" placeholder="उदा: RJ94287751IN" value="${latestOrder.trackingNo || ''}" style="font-size: 0.78rem; padding: 4px 8px; font-family: monospace; min-width: 120px;">
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span style="font-size: 0.75rem; font-weight: 600; color: ${hasEbooks ? '#059669' : '#94A3B8'};">
+              <i class="fa-solid ${hasEbooks ? 'fa-circle-check' : 'fa-circle-xmark'} mr-1"></i> ई-नोट्स: ${hasEbooks ? 'सक्रिय' : 'बंद'}
+            </span>
+            <span style="font-size: 0.75rem; font-weight: 600; color: ${hasTests ? '#059669' : '#94A3B8'};">
+              <i class="fa-solid ${hasTests ? 'fa-circle-check' : 'fa-circle-xmark'} mr-1"></i> टेस्ट: ${hasTests ? 'सक्रिय' : 'बंद'}
+            </span>
+          </div>
         </td>
         <td style="text-align: right;">
-          <button type="button" onclick="window.saveStudentAdminChanges('${uid}')" class="btn btn-sm btn-primary" id="btn-save-${uid}" style="white-space: nowrap; font-size: 0.75rem;">
-            <i class="fa-solid fa-floppy-disk mr-1"></i> अपडेट करें
+          <button type="button" onclick="window.openManageStudentModal('${uid}')" class="btn btn-sm btn-primary" style="white-space: nowrap; font-size: 0.78rem; font-weight: 600;">
+            <i class="fa-solid fa-pen-to-square mr-1"></i> पुस्तक व ई-बुक्स प्रबंधित करें
           </button>
         </td>
       </tr>
@@ -373,25 +454,114 @@ function renderStudentsTable(students) {
   }).join('');
 }
 
-// Global update function callable from table action buttons
-window.saveStudentAdminChanges = async function(uid) {
-  const btn = document.getElementById(`btn-save-${uid}`);
-  const ebooksCheckbox = document.getElementById(`ebooks-${uid}`);
-  const testsCheckbox = document.getElementById(`tests-${uid}`);
-  const statusSelect = document.getElementById(`delivery-status-${uid}`);
-  const trackingInput = document.getElementById(`tracking-${uid}`);
+// Global modal open helper
+window.openManageStudentModal = function(uid) {
+  const student = studentsListCache.find(s => (s.id || s.uid) === uid);
+  if (!student) {
+    alert('विद्यार्थी का डेटा नहीं मिला।');
+    return;
+  }
 
-  if (!btn) return;
+  const modal = document.getElementById('adminManageStudentModal');
+  const uidBadge = document.getElementById('modalStudentUidBadge');
+  const subTitle = document.getElementById('modalStudentSubTitle');
+  const studentIdInput = document.getElementById('modalStudentId');
+  const bookSelect = document.getElementById('modalBookSelect');
+  const deliveryStatusSelect = document.getElementById('modalDeliveryStatus');
+  const trackingInput = document.getElementById('modalTrackingNo');
+  const addressInput = document.getElementById('modalDeliveryAddress');
+  const ebooksToggle = document.getElementById('modalEbooksToggle');
+  const testsToggle = document.getElementById('modalTestsToggle');
 
-  const originalHtml = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+  if (!modal) return;
+
+  studentIdInput.value = uid;
+  uidBadge.innerText = `UID: ${uid.substring(0, 8).toUpperCase()}`;
+  subTitle.innerText = `${student.name || 'विद्यार्थी'} • ${student.email || ''} • मोबाइल: ${student.phone || 'उपलब्ध नहीं'}`;
+
+  // Populate orders
+  const orders = Array.isArray(student.bookOrders) && student.bookOrders.length > 0 ? student.bookOrders : [];
+  const latestOrder = orders.length > 0 ? orders[orders.length - 1] : {};
+
+  // Book Selection
+  if (bookSelect) {
+    if (latestOrder.bookTitle) {
+      // Find matching option or set value
+      let matched = false;
+      for (let opt of bookSelect.options) {
+        if (opt.value.includes(latestOrder.bookTitle) || latestOrder.bookTitle.includes(opt.value)) {
+          bookSelect.value = opt.value;
+          matched = true;
+          break;
+        }
+      }
+      if (!matched) {
+        bookSelect.value = latestOrder.bookTitle;
+      }
+    } else {
+      bookSelect.value = 'कोई पुस्तक नहीं';
+    }
+  }
+
+  // Delivery Status
+  if (deliveryStatusSelect) {
+    if (latestOrder.status) {
+      let matched = false;
+      for (let opt of deliveryStatusSelect.options) {
+        if (opt.value.includes(latestOrder.status) || latestOrder.status.includes(opt.value)) {
+          deliveryStatusSelect.value = opt.value;
+          matched = true;
+          break;
+        }
+      }
+      if (!matched) {
+        deliveryStatusSelect.value = 'ऑर्डर प्राप्त (Pending)';
+      }
+    } else {
+      deliveryStatusSelect.value = 'कोई ऑर्डर नहीं';
+    }
+  }
+
+  if (trackingInput) trackingInput.value = latestOrder.trackingNo || '';
+  if (addressInput) addressInput.value = latestOrder.address || student.deliveryAddress || student.city || '';
+  if (ebooksToggle) ebooksToggle.checked = !!student.hasEbooksAccess;
+  if (testsToggle) testsToggle.checked = !!student.hasTestSeriesAccess;
+
+  modal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+};
+
+window.closeManageStudentModal = function() {
+  const modal = document.getElementById('adminManageStudentModal');
+  if (modal) modal.style.display = 'none';
+  document.body.style.overflow = '';
+};
+
+// Handle form submit from modal
+async function handleSaveStudentFromModal(e) {
+  e.preventDefault();
+  const uid = document.getElementById('modalStudentId').value;
+  const bookSelect = document.getElementById('modalBookSelect');
+  const deliveryStatusSelect = document.getElementById('modalDeliveryStatus');
+  const trackingInput = document.getElementById('modalTrackingNo');
+  const addressInput = document.getElementById('modalDeliveryAddress');
+  const ebooksToggle = document.getElementById('modalEbooksToggle');
+  const testsToggle = document.getElementById('modalTestsToggle');
+  const saveBtn = document.getElementById('modalSaveStudentBtn');
+
+  if (!uid) return;
+
+  const originalBtnHtml = saveBtn.innerHTML;
+  saveBtn.disabled = true;
+  saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Firestore में सहेजा जा रहा है...';
 
   try {
-    const hasEbooksAccess = ebooksCheckbox ? ebooksCheckbox.checked : false;
-    const hasTestSeriesAccess = testsCheckbox ? testsCheckbox.checked : false;
-    const deliveryStatus = statusSelect ? statusSelect.value : 'कोई ऑर्डर नहीं';
+    const selectedBook = bookSelect ? bookSelect.value : 'कोई पुस्तक नहीं';
+    const selectedStatus = deliveryStatusSelect ? deliveryStatusSelect.value : 'कोई ऑर्डर नहीं';
     const trackingNo = trackingInput ? trackingInput.value.trim() : '';
+    const deliveryAddress = addressInput ? addressInput.value.trim() : '';
+    const hasEbooksAccess = ebooksToggle ? ebooksToggle.checked : false;
+    const hasTestSeriesAccess = testsToggle ? testsToggle.checked : false;
 
     const studentRef = doc(db, "students", uid);
     const studentSnap = await getDoc(studentRef);
@@ -401,41 +571,46 @@ window.saveStudentAdminChanges = async function(uid) {
       bookOrders = [...studentSnap.data().bookOrders];
     }
 
-    if (deliveryStatus !== 'कोई ऑर्डर नहीं') {
+    if (selectedBook !== 'कोई पुस्तक नहीं' || selectedStatus !== 'कोई ऑर्डर नहीं' || trackingNo) {
+      const orderEntry = {
+        orderId: 'BK-' + uid.substring(0, 4).toUpperCase() + '-' + Math.floor(100 + Math.random() * 900),
+        bookTitle: selectedBook !== 'कोई पुस्तक नहीं' ? selectedBook : 'मंदार पब्लिकेशन हिंदी पुस्तक',
+        status: selectedStatus !== 'कोई ऑर्डर नहीं' ? selectedStatus : 'ऑर्डर प्राप्त',
+        trackingNo: trackingNo,
+        address: deliveryAddress,
+        updatedAt: new Date().toISOString()
+      };
+
       if (bookOrders.length === 0) {
-        bookOrders.push({
-          orderId: 'BK-' + uid.substring(0, 4).toUpperCase(),
-          bookTitle: 'मंदार पब्लिकेशन हिंदी पुस्तक',
-          status: deliveryStatus,
-          trackingNo: trackingNo,
-          updatedAt: new Date().toISOString()
-        });
+        bookOrders.push(orderEntry);
       } else {
-        bookOrders[0].status = deliveryStatus;
-        bookOrders[0].trackingNo = trackingNo;
-        bookOrders[0].updatedAt = new Date().toISOString();
+        // Update the active order
+        bookOrders[bookOrders.length - 1] = {
+          ...bookOrders[bookOrders.length - 1],
+          ...orderEntry
+        };
       }
     }
 
-    await updateDoc(studentRef, {
+    const updatePayload = {
       hasEbooksAccess,
       hasTestSeriesAccess,
       bookOrders,
+      deliveryAddress,
       lastAdminUpdate: new Date().toISOString()
-    });
+    };
 
-    btn.style.backgroundColor = '#10B981';
-    btn.innerHTML = '<i class="fa-solid fa-check"></i> अपडेट सफल!';
-    setTimeout(() => {
-      btn.style.backgroundColor = '';
-      btn.innerHTML = originalHtml;
-      btn.disabled = false;
-    }, 2000);
+    await updateDoc(studentRef, updatePayload);
+
+    alert('विद्यार्थी का डेटा एवं अनुमतियां Firestore में सफलतापूर्वक अपडेट हो गईं!');
+    window.closeManageStudentModal();
 
   } catch (error) {
-    console.error("Error updating student permissions:", error);
-    alert('अपडेट करने में त्रुटि आई: ' + error.message);
-    btn.disabled = false;
-    btn.innerHTML = originalHtml;
+    console.error("Error updating student via modal:", error);
+    alert('त्रुटि आई: ' + error.message);
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = originalBtnHtml;
   }
-};
+}
+

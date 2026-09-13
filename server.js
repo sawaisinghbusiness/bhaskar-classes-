@@ -31,18 +31,14 @@ const server = http.createServer((req, res) => {
     const repoUrl = 'https://github.com/sawaisinghbusiness/bhaskar-classes-.git';
     const log = [];
     try {
-      log.push(execSync(`${gitBin} init`, { cwd: PUBLIC_DIR, encoding: 'utf8' }));
       log.push(execSync(`${gitBin} config user.name "Bhaskar Classes"`, { cwd: PUBLIC_DIR, encoding: 'utf8' }));
       log.push(execSync(`${gitBin} config user.email "admin@bhaskarclasses2015.com"`, { cwd: PUBLIC_DIR, encoding: 'utf8' }));
       log.push(execSync(`${gitBin} add .`, { cwd: PUBLIC_DIR, encoding: 'utf8' }));
       try {
-        log.push(execSync(`${gitBin} commit -m "feat: complete multi-user student and admin portal with Firebase Firestore integration"`, { cwd: PUBLIC_DIR, encoding: 'utf8' }));
+        log.push(execSync(`${gitBin} commit -m "feat: student redirect fix, Firestore inquiry sync, and admin book/ebook modal"`, { cwd: PUBLIC_DIR, encoding: 'utf8' }));
       } catch(e) {
-        log.push('Commit note: ' + (e.stdout || e.message));
+        log.push('Commit: ' + (e.stdout || e.message));
       }
-      try { execSync(`${gitBin} remote remove origin`, { cwd: PUBLIC_DIR, encoding: 'utf8' }); } catch(e){}
-      execSync(`${gitBin} remote add origin ${repoUrl}`, { cwd: PUBLIC_DIR, encoding: 'utf8' });
-      execSync(`${gitBin} branch -M main`, { cwd: PUBLIC_DIR, encoding: 'utf8' });
       log.push(execSync(`${gitBin} push -u origin main --force`, { cwd: PUBLIC_DIR, encoding: 'utf8' }));
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: true, log }));

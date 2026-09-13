@@ -126,6 +126,18 @@ function initAuthUI() {
     });
   }
 
+  // Student Dashboard Internal Tab Switching
+  document.querySelectorAll('[data-student-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('data-student-tab');
+      document.querySelectorAll('#studentDashboardView .tab-panel').forEach(panel => panel.classList.remove('active'));
+      document.querySelectorAll('[data-student-tab]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const targetPanel = document.getElementById(targetId);
+      if (targetPanel) targetPanel.classList.add('active');
+    });
+  });
+
   // Password Visibility Toggles
   document.querySelectorAll('.toggle-pass-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -380,10 +392,14 @@ function initFirebaseListener() {
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      // Keep dashboard hidden while checking
-      if (dashboardView) dashboardView.style.display = 'none';
+      // 1. Block Admin account on student portal if admin session exists
+      if (sessionStorage.getItem('bhaskar_portal_mode') === 'admin') {
+        if (dashboardView) dashboardView.style.display = 'none';
+        if (loginView) loginView.style.display = 'block';
+        return;
+      }
 
-      // 1. Block Admin account on student portal
+      // Check admin status asynchronously in background
       try {
         const adminDocRef = doc(db, "admins", user.uid);
         const adminDocSnap = await getDoc(adminDocRef);
@@ -394,47 +410,61 @@ function initFirebaseListener() {
           return;
         }
       } catch (e) {
-        console.warn("Student check note:", e);
+        console.warn("Admin check note (can be ignored if student):", e.message);
       }
 
-      if (sessionStorage.getItem('bhaskar_portal_mode') === 'admin') {
-        if (dashboardView) dashboardView.style.display = 'none';
-        if (loginView) loginView.style.display = 'block';
-        return;
-      }
-
-      // 2. Fetch or initialize Student Firestore document
-      const studentRef = doc(db, "students", user.uid);
-      const studentSnap = await getDoc(studentRef);
-
-      if (!studentSnap.exists()) {
-        await setDoc(studentRef, {
-          uid: user.uid,
-          name: user.displayName || user.email.split('@')[0],
-          email: user.email,
-          phone: user.phoneNumber || '',
-          targetExam: 'RPSC वरिष्ठ अध्यापक (2nd Grade) हिंदी',
-          city: '',
-          deliveryAddress: '',
-          hasTestSeriesAccess: false,
-          hasEbooksAccess: false,
-          bookOrders: [],
-          createdAt: new Date().toISOString()
-        });
-      }
-
-      // 3. Setup real-time listener for student data
-      if (unsubscribeStudentDoc) unsubscribeStudentDoc();
-
-      unsubscribeStudentDoc = onSnapshot(studentRef, (docSnap) => {
-        if (!docSnap.exists()) return;
-        const data = docSnap.data();
-        renderStudentDashboard(user, data);
-      });
-
-      // Show dashboard
+      // 2. Immediately switch view to Student Dashboard (no blocking!)
       if (loginView) loginView.style.display = 'none';
       if (dashboardView) dashboardView.style.display = 'block';
+
+      // Initial fast render using user auth profile
+      renderStudentDashboard(user, {
+        name: user.displayName || user.email.split('@')[0],
+        email: user.email,
+        phone: user.phoneNumber || '',
+        targetExam: 'RPSC वरिष्ठ अध्यापक (2nd Grade) हिंदी',
+        city: '',
+        deliveryAddress: '',
+        hasTestSeriesAccess: false,
+        hasEbooksAccess: false,
+        bookOrders: []
+      });
+
+      // 3. Fetch or initialize Student Firestore document
+      try {
+        const studentRef = doc(db, "students", user.uid);
+        const studentSnap = await getDoc(studentRef);
+
+        if (!studentSnap.exists()) {
+          await setDoc(studentRef, {
+            uid: user.uid,
+            name: user.displayName || user.email.split('@')[0],
+            email: user.email,
+            phone: user.phoneNumber || '',
+            targetExam: 'RPSC वरिष्ठ अध्यापक (2nd Grade) हिंदी',
+            city: '',
+            deliveryAddress: '',
+            hasTestSeriesAccess: false,
+            hasEbooksAccess: false,
+            bookOrders: [],
+            createdAt: new Date().toISOString()
+          });
+        }
+
+        // 4. Setup real-time listener for student data
+        if (unsubscribeStudentDoc) unsubscribeStudentDoc();
+
+        unsubscribeStudentDoc = onSnapshot(studentRef, (docSnap) => {
+          if (!docSnap.exists()) return;
+          const data = docSnap.data();
+          renderStudentDashboard(user, data);
+        }, (err) => {
+          console.warn("Student snapshot listener notice:", err.message);
+        });
+
+      } catch (firestoreErr) {
+        console.warn("Firestore access notice:", firestoreErr.message);
+      }
 
     } else {
       // User is signed out

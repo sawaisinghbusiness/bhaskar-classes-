@@ -417,6 +417,11 @@ function handleAdminLogout() {
 }
 
 function checkAdminSession() {
+  // If admin.html is active with Firebase Authentication, let admin-auth.js strictly control access
+  if (document.getElementById('adminEmail')) {
+    return;
+  }
+
   const isAdmin = localStorage.getItem('bhaskar_admin_logged_in') === 'true';
 
   const setupView = document.getElementById('adminSetupView');
@@ -552,19 +557,43 @@ function initInquiryForm() {
       return;
     }
 
-    // Save lead to LocalStorage for Admin Panel
+    // Save lead to LocalStorage as immediate local backup
     const lead = {
       name,
       phone,
       course,
       city: city || 'बाड़मेर',
       message: msg,
-      date: new Date().toLocaleDateString('hi-IN')
+      date: new Date().toLocaleDateString('hi-IN'),
+      createdAt: new Date().toISOString()
     };
 
     let inquiries = JSON.parse(localStorage.getItem('bhaskar_inquiries') || '[]');
     inquiries.unshift(lead);
     localStorage.setItem('bhaskar_inquiries', JSON.stringify(inquiries));
+
+    // Also write directly to Firebase Firestore "inquiries" collection
+    if (window.FirebaseAuth && window.FirebaseAuth.db && typeof window.FirebaseAuth.addDoc === 'function') {
+      try {
+        const { collection } = window.FirebaseAuth;
+        // fallback if collection not directly on FirebaseAuth
+        import("./firebase-config.js").then(async ({ db, collection, addDoc }) => {
+          await addDoc(collection(db, "inquiries"), lead);
+          console.log("Lead successfully synced to Firestore inquiries!");
+        }).catch(err => {
+          console.warn("Firestore lead sync warning:", err.message);
+        });
+      } catch (err) {
+        console.warn("Firestore sync warning:", err);
+      }
+    } else {
+      import("./firebase-config.js").then(async ({ db, collection, addDoc }) => {
+        await addDoc(collection(db, "inquiries"), lead);
+        console.log("Lead successfully synced to Firestore inquiries!");
+      }).catch(err => {
+        console.warn("Firestore lead sync warning:", err.message);
+      });
+    }
 
     // Open WhatsApp with prefilled message to Bhaskar Classes Helpline
     const waMsg = encodeURIComponent(
