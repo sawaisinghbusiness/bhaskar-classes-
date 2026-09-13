@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>विद्यार्थी पोर्टल एवं लॉगिन | भास्कर क्लासेज बाड़मेर</title>
+  <meta name="description" content="भास्कर क्लासेज बाड़मेर विद्यार्थी लॉगिन पोर्टल - RPSC 1st & 2nd Grade हिंदी ऑनलाइन कोर्सेज, लाइव कक्षाएं, टेस्ट एवं हस्तलिखित ई-नोट्स।">
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .portal-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--color-bg-alt);
+    }
+    .portal-nav {
+      background-color: #ffffff;
+      border-bottom: 1px solid var(--color-border);
+      padding: 1rem 0;
+    }
+    .portal-nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .portal-main {
+      flex: 1;
+      padding: 2.5rem 0;
+    }
+    .portal-card {
+      background-color: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .portal-login-box {
+      max-width: 440px;
+      margin: 2rem auto;
+      padding: 2.5rem 2rem;
+    }
+  </style>
+</head>
+<body class="portal-page">
+
+  <!-- Header Navigation -->
+  <header class="portal-nav">
+    <div class="container portal-nav-inner">
+      <a href="index.html" class="brand" aria-label="भास्कर क्लासेज बाड़मेर">
+        <img src="new logo for the web.png" alt="भास्कर क्लासेज बाड़मेर - विद्यार्थी पोर्टल" style="height: 48px; width: auto; display: block;" onerror="this.onerror=null; this.src='bhaskar-logo.png';">
+      </a>
+
+      <a href="index.html" class="btn btn-sm btn-outline">
+        <i class="fa-solid fa-arrow-left"></i> मुख्य वेबसाइट पर जाएं
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Portal Content -->
+  <main class="portal-main">
+    <div class="container">
+
+      <!-- ================= VIEW 1: STUDENT LOGIN & REGISTRATION ================= -->
+      <div id="studentLoginView">
+        <div class="portal-card portal-login-box">
+          <div style="text-align: center; margin-bottom: 1.5rem;">
+            <div style="background-color: #ffffff; border: 1px solid var(--color-border); border-radius: var(--radius-btn); display: inline-block; padding: 6px 14px; margin: 0 auto 0.75rem; box-shadow: var(--shadow-sm);">
+              <img src="new logo for the web.png" alt="भास्कर क्लासेज बाड़मेर" style="height: 48px; width: auto; display: block;" onerror="this.onerror=null; this.src='bhaskar-logo.png';">
+            </div>
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--color-primary);">विद्यार्थी लॉगिन पोर्टल</h2>
+            <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+              सुरक्षित Firebase प्रमाणीकरण • Classplus Org: <strong style="color: var(--color-primary);">bysvk</strong>
+            </p>
+          </div>
+
+          <!-- Alert box for success / error notifications -->
+          <div id="authAlertBox" style="display: none; padding: 10px 14px; border-radius: 8px; font-size: 0.825rem; margin-bottom: 1.25rem; line-height: 1.4;"></div>
+
+          <!-- 1. GOOGLE ONE-CLICK SIGN IN -->
+          <button type="button" id="googleSignInBtn" class="btn btn-full btn-lg" style="background:#FFFFFF; color:#1E2B58; border:1.5px solid #CBD5E1; display:flex; align-items:center; justify-content:center; gap:12px; font-weight:600; box-shadow: 0 2px 6px rgba(30,43,88,0.06); transition: all 0.2s ease;">
+            <svg width="20" height="20" viewBox="0 0 48 48">
+              <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+              <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+              <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+              <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+            </svg>
+            <span>Google से एक-क्लिक लॉगिन करें</span>
+          </button>
+
+          <!-- Divider -->
+          <div style="display:flex; align-items:center; gap:12px; margin: 1.5rem 0; color:#94A3B8; font-size:0.8rem;">
+            <span style="flex:1; height:1px; background:#E2E8F0;"></span>
+            <span>या ईमेल द्वारा</span>
+            <span style="flex:1; height:1px; background:#E2E8F0;"></span>
+          </div>
+
+          <!-- Tab Selector: Login vs Register -->
+          <div style="display: flex; background: #F1F5F9; border-radius: 8px; padding: 4px; margin-bottom: 1.25rem;">
+            <button type="button" id="tabBtnLogin" class="auth-tab-btn active" style="flex: 1; padding: 8px; font-size: 0.875rem; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s; background: #FFFFFF; color: #1E2B58; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+              लॉगिन करें
+            </button>
+            <button type="button" id="tabBtnRegister" class="auth-tab-btn" style="flex: 1; padding: 8px; font-size: 0.875rem; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s; background: transparent; color: #64748B;">
+              नया रजिस्ट्रेशन
+            </button>
+          </div>
+
+          <!-- 2. EMAIL/PASSWORD LOGIN FORM -->
+          <form id="emailLoginForm">
+            <div class="form-group">
+              <label class="form-label" for="loginEmail">ईमेल आईडी</label>
+              <input type="email" id="loginEmail" class="form-control" placeholder="उदा: student@gmail.com" required>
+            </div>
+
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <label class="form-label" for="loginPassword" style="margin-bottom: 0;">पासवर्ड</label>
+                <button type="button" id="forgotPasswordBtn" style="background: none; border: none; color: var(--color-accent); font-size: 0.775rem; font-weight: 600; cursor: pointer; padding: 0;">पासवर्ड भूल गए?</button>
+              </div>
+              <div style="position: relative;">
+                <input type="password" id="loginPassword" class="form-control" placeholder="अपना पासवर्ड दर्ज करें" required minlength="6" style="padding-right: 40px;">
+                <button type="button" class="toggle-pass-btn" data-target="loginPassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #94A3B8; cursor: pointer;">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" id="emailLoginSubmitBtn" class="btn btn-primary btn-full btn-lg" style="margin-top: 1rem;">
+              <span>लॉगिन करें</span> <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </form>
+
+          <!-- 3. EMAIL/PASSWORD REGISTRATION FORM -->
+          <form id="emailRegisterForm" style="display: none;">
+            <div class="form-group">
+              <label class="form-label" for="regName">पूरा नाम (Full Name)</label>
+              <input type="text" id="regName" class="form-control" placeholder="उदा: रमेश कुमार" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="regEmail">ईमेल आईडी (Email ID)</label>
+              <input type="email" id="regEmail" class="form-control" placeholder="उदा: student@gmail.com" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="regPhone">मोबाइल नंबर (Mobile No.)</label>
+              <input type="tel" id="regPhone" class="form-control" placeholder="उदा: 9829XXXXXX" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="regPassword">पासवर्ड बनाएं (कम से कम 6 अक्षर)</label>
+              <div style="position: relative;">
+                <input type="password" id="regPassword" class="form-control" placeholder="नया पासवर्ड" required minlength="6" style="padding-right: 40px;">
+                <button type="button" class="toggle-pass-btn" data-target="regPassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #94A3B8; cursor: pointer;">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="regGoal">लक्ष्य (Target Exam)</label>
+              <select id="regGoal" class="form-control">
+                <option value="RPSC वरिष्ठ अध्यापक (2nd Grade) हिंदी">RPSC वरिष्ठ अध्यापक (2nd Grade) हिंदी</option>
+                <option value="RPSC स्कूल व्याख्याता (1st Grade) हिंदी">RPSC स्कूल व्याख्याता (1st Grade) हिंदी</option>
+                <option value="कॉम्बो: 1st एवं 2nd Grade दोनों">कॉम्बो: 1st एवं 2nd Grade दोनों</option>
+              </select>
+            </div>
+
+            <button type="submit" id="emailRegisterSubmitBtn" class="btn btn-accent btn-full btn-lg" style="margin-top: 1rem;">
+              <span>खाता बनाएं एवं लॉगिन करें</span> <i class="fa-solid fa-user-plus"></i>
+            </button>
+          </form>
+
+          <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); text-align: center; font-size: 0.8125rem; color: var(--color-text-muted);">
+            खाता या कोर्स सहायता हेतु हेल्पलाइन: <a href="tel:8949287751" style="color: var(--color-primary); font-weight: 700;">8949287751</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= VIEW 2: UTKARSH-STYLE STUDENT DASHBOARD ================= -->
+      <div id="studentDashboardView" style="display: none;">
+        <div class="portal-card">
+          
+          <!-- Student Header Banner -->
+          <div style="background-color: var(--color-primary); color: #ffffff; padding: 1.75rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 1.25rem;">
+              <div id="studentAvatarInitial" style="width: 3.75rem; height: 3.75rem; border-radius: 50%; background-color: var(--color-accent); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; font-weight: 800; overflow: hidden;">
+                क
+              </div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <h2 id="studentWelcomeName" style="font-size: 1.375rem; font-weight: 800; color: #ffffff;">विद्यार्थी</h2>
+                  <span style="background-color: var(--color-success); color: #ffffff; font-size: 0.6875rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: var(--radius-pill);">सत्यापित छात्र (Verified)</span>
+                </div>
+                <div id="studentGoalDisplay" style="font-size: 0.875rem; color: #fdba74; font-weight: 600; margin-top: 0.25rem;">
+                  🎯 लक्ष्य: RPSC 2nd Grade हिंदी
+                </div>
+                <div style="font-size: 0.8125rem; color: #cbd5e1; margin-top: 0.35rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                  <span id="studentDisplayPhone"><i class="fa-solid fa-envelope mr-1"></i> --</span>
+                  <span>•</span>
+                  <span id="studentDisplayId">UID: <strong>--</strong></span>
+                  <span>•</span>
+                  <span>Org Code: <strong style="color: #00A3E8;">bysvk</strong></span>
+                </div>
+              </div>
+            </div>
+
+            <button id="studentLogoutBtn" class="btn btn-sm btn-outline-white">
+              <i class="fa-solid fa-right-from-bracket"></i> लॉगआउट
+            </button>
+          </div>
+
+          <!-- 4 KPI Metrics -->
+          <div style="padding: 1.5rem 2rem 0.5rem;">
+            <div class="kpi-row">
+              <div class="kpi-card">
+                <div class="val" id="kpiBookOrdersCount">0 पुस्तकें</div>
+                <div class="lbl">ऑर्डर की गई पुस्तकें</div>
+              </div>
+              <div class="kpi-card">
+                <div class="val" id="kpiDeliveryStatus" style="color: var(--color-primary); font-size: 1.1rem;">कोई ऑर्डर नहीं</div>
+                <div class="lbl">पुस्तक डिलीवरी स्थिति</div>
+              </div>
+              <div class="kpi-card">
+                <div class="val" id="kpiEbooksStatus" style="font-size: 1.1rem; color: #dc2626;">लॉक्ड (Locked)</div>
+                <div class="lbl">ई-नोट्स व ई-बुक्स</div>
+              </div>
+              <div class="kpi-card">
+                <div class="val" id="kpiTestSeriesStatus" style="font-size: 1.1rem; color: #dc2626;">लॉक्ड (Locked)</div>
+                <div class="lbl">ऑनलाइन टेस्ट सीरीज</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard Tabs Navigation -->
+          <div style="padding: 0 2rem;">
+            <div class="tab-nav">
+              <button class="tab-btn active" data-student-tab="tabBooks"><i class="fa-solid fa-truck"></i> मेरी पुस्तकें (Delivery Tracking)</button>
+              <button class="tab-btn" data-student-tab="tabNotes"><i class="fa-solid fa-file-pdf"></i> ई-नोट्स व पुस्तकें</button>
+              <button class="tab-btn" data-student-tab="tabTests"><i class="fa-solid fa-clipboard-check"></i> टेस्ट सीरीज (Test Series)</button>
+              <button class="tab-btn" data-student-tab="tabProfile"><i class="fa-solid fa-user-gear"></i> प्रोफ़ाइल विवरण</button>
+            </div>
+          </div>
+
+          <!-- Tab Contents Body -->
+          <div style="padding: 1.5rem 2rem 2.5rem;">
+
+            <!-- Tab 1: Books & Delivery -->
+            <div id="tabBooks" class="tab-panel active">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                <div>
+                  <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--color-primary); margin-bottom: 0.2rem;">मंदार पब्लिकेशन बाड़मेर - आपकी पुस्तकें व स्पीड पोस्ट डिलीवरी ट्रैकिंग</h4>
+                  <p style="font-size: 0.8125rem; color: var(--color-text-muted);">एडमिन द्वारा आपकी पुस्तक का लाइव डिस्पैच स्टेटस यहाँ अपडेट किया जाता है।</p>
+                </div>
+              </div>
+
+              <!-- Books Dynamic Container -->
+              <div id="studentBooksContainer" style="display: flex; flex-direction: column; gap: 1rem;">
+                <!-- Dynamically loaded from Firestore -->
+              </div>
+
+              <div style="margin-top: 1.5rem; text-align: center;">
+                <a href="https://wa.me/918949287751?text=नमस्ते%20भास्कर%20क्लासेज,%20मुझे%20अपने%20पुस्तक%20ऑर्डर%20के%20बारे%20में%20पूछना%20है।" target="_blank" class="btn btn-sm btn-outline">
+                  <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> पुस्तक सहायता हेतु व्हाट्सएप पर संपर्क करें (8949287751)
+                </a>
+              </div>
+            </div>
+
+            <!-- Tab 2: E-Notes & E-Books (Admin Permission Driven) -->
+            <div id="tabNotes" class="tab-panel">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                <div>
+                  <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--color-primary); margin-bottom: 0.2rem;">अध्यायवार प्रामाणिक हस्तलिखित ई-नोट्स व ई-बुक्स</h4>
+                  <p style="font-size: 0.8125rem; color: var(--color-text-muted);">R.R. Choudhary Sir द्वारा तैयार विशिष्ट डिजिटल अध्ययन सामग्री</p>
+                </div>
+                <div id="ebooksAccessBadge">
+                  <!-- Loaded dynamically -->
+                </div>
+              </div>
+
+              <!-- Locked Notice Banner (shown if no access) -->
+              <div id="ebooksLockedBanner" style="display: none; background-color: #fef2f2; border: 1.5px solid #fecaca; border-radius: var(--radius-card); padding: 1.5rem; text-align: center; margin-bottom: 1.5rem;">
+                <div style="width: 3.5rem; height: 3.5rem; background-color: #fee2e2; color: #dc2626; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 0.75rem;">
+                  <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 style="font-size: 1.15rem; font-weight: 800; color: #991b1b; margin-bottom: 0.35rem;">ई-नोट्स व ई-बुक्स एक्सेस अभी स्वीकृत नहीं है</h3>
+                <p style="font-size: 0.85rem; color: #7f1d1d; max-width: 550px; margin: 0 auto 1rem;">
+                  इस सुविधा को सक्रिय करने के लिए एडमिन अनुमोदन की आवश्यकता होती है। यदि आपने शुल्क का भुगतान कर दिया है तो कृपया संस्थान हेल्पलाइन पर संपर्क करें।
+                </p>
+                <a href="https://wa.me/918949287751?text=नमस्ते%20भास्कर%20क्लासेज,%20कृपया%20मेरे%20ई-नोट्स%20का%20एक्सेस%20चालू%20करें।" target="_blank" class="btn btn-primary" style="background-color: #dc2626; border-color: #dc2626;">
+                  <i class="fa-brands fa-whatsapp"></i> एडमिन से ई-बुक्स अनलॉक करवाएं
+                </a>
+              </div>
+
+              <!-- Unlocked E-books Content -->
+              <div id="ebooksUnlockedContent" style="display: none; flex-direction: column; gap: 0.75rem;">
+                <div style="background-color: var(--color-bg-alt); border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fa-solid fa-file-pdf" style="font-size: 1.75rem; color: #dc2626;"></i>
+                    <div>
+                      <div style="font-size: 0.9375rem; font-weight: 700; color: var(--color-primary);">हिंदी साहित्य का इतिहास (आदिकाल व भक्तिकाल)</div>
+                      <div style="font-size: 0.75rem; color: var(--color-text-muted);">हस्तलिखित नोट्स • 4.2 MB • प्रिंट योग्य PDF</div>
+                    </div>
+                  </div>
+                  <a href="https://sansa.page.link/oC8g" target="_blank" class="btn btn-sm btn-outline">
+                    <i class="fa-solid fa-download"></i> डाउनलोड
+                  </a>
+                </div>
+
+                <div style="background-color: var(--color-bg-alt); border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fa-solid fa-file-pdf" style="font-size: 1.75rem; color: #dc2626;"></i>
+                    <div>
+                      <div style="font-size: 0.9375rem; font-weight: 700; color: var(--color-primary);">काव्यशास्त्र विशेषांक (रस, छंद, अलंकार सूत्र संग्रह)</div>
+                      <div style="font-size: 0.75rem; color: var(--color-text-muted);">हस्तलिखित ट्रिक्स • 3.1 MB • प्रिंट योग्य PDF</div>
+                    </div>
+                  </div>
+                  <a href="https://sansa.page.link/oC8g" target="_blank" class="btn btn-sm btn-outline">
+                    <i class="fa-solid fa-download"></i> डाउनलोड
+                  </a>
+                </div>
+
+                <div style="background-color: var(--color-bg-alt); border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fa-solid fa-file-pdf" style="font-size: 1.75rem; color: #dc2626;"></i>
+                    <div>
+                      <div style="font-size: 0.9375rem; font-weight: 700; color: var(--color-primary);">हिंदी शिक्षण विधियां एवं मनोविज्ञान संकलन</div>
+                      <div style="font-size: 0.75rem; color: var(--color-text-muted);">2nd Grade विशेष नोट्स • 2.8 MB</div>
+                    </div>
+                  </div>
+                  <a href="https://sansa.page.link/oC8g" target="_blank" class="btn btn-sm btn-outline">
+                    <i class="fa-solid fa-download"></i> डाउनलोड
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab 3: Test Series (Admin Permission Driven) -->
+            <div id="tabTests" class="tab-panel">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                <div>
+                  <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--color-primary); margin-bottom: 0.2rem;">ऑनलाइन टेस्ट सीरीज पोर्टल</h4>
+                  <p style="font-size: 0.8125rem; color: var(--color-text-muted);">RPSC 1st & 2nd Grade हिंदी उच्चस्तरीय ऑल राजस्थान टेस्ट</p>
+                </div>
+                <div id="testsAccessBadge">
+                  <!-- Loaded dynamically -->
+                </div>
+              </div>
+
+              <!-- Locked Notice Banner (shown if no access) -->
+              <div id="testsLockedBanner" style="display: none; background-color: #fef2f2; border: 1.5px solid #fecaca; border-radius: var(--radius-card); padding: 1.5rem; text-align: center; margin-bottom: 1.5rem;">
+                <div style="width: 3.5rem; height: 3.5rem; background-color: #fee2e2; color: #dc2626; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 0.75rem;">
+                  <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 style="font-size: 1.15rem; font-weight: 800; color: #991b1b; margin-bottom: 0.35rem;">टेस्ट सीरीज एक्सेस अभी स्वीकृत नहीं है</h3>
+                <p style="font-size: 0.85rem; color: #7f1d1d; max-width: 550px; margin: 0 auto 1rem;">
+                  एडमिन द्वारा आपके खाते के लिए टेस्ट सीरीज का एक्सेस सक्रिय करने के पश्चात आप सभी टेस्ट दे सकेंगे।
+                </p>
+                <a href="https://wa.me/918949287751?text=नमस्ते%20भास्कर%20क्लासेज,%20कृपया%20मेरी%20टेस्ट%20सीरीज%20सक्रिय%20करें।" target="_blank" class="btn btn-primary" style="background-color: #dc2626; border-color: #dc2626;">
+                  <i class="fa-brands fa-whatsapp"></i> टेस्ट सीरीज एक्सेस चालू करवाएं
+                </a>
+              </div>
+
+              <!-- Unlocked Tests Content -->
+              <div id="testsUnlockedContent" style="display: none; flex-direction: column; gap: 1rem;">
+                <div style="background-color: var(--color-bg-alt); border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+                  <div>
+                    <span style="font-size: 0.6875rem; font-weight: 800; color: #ffffff; background-color: var(--color-success); padding: 0.15rem 0.5rem; border-radius: 4px;">सक्रिय टेस्ट सीरीज (Active)</span>
+                    <h4 style="font-size: 1.125rem; font-weight: 800; color: var(--color-primary); margin-top: 0.35rem;">RPSC वरिष्ठ अध्यापक एवं स्कूल व्याख्याता हिंदी टेस्ट सीरीज</h4>
+                    <p style="font-size: 0.8125rem; color: var(--color-text-muted);">टॉपिक वाइज टेस्ट + संपूर्ण पाठ्यक्रम 15 मेजर टेस्ट • ऑल राजस्थान रैंक विश्लेषण</p>
+                  </div>
+                  <a href="https://sansa.page.link/oC8g" target="_blank" class="btn btn-primary btn-lg">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> टेस्ट पोर्टल खोलें (Classplus App)
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab 6: Profile -->
+            <div id="tabProfile" class="tab-panel">
+              <div style="max-width: 600px;">
+                <h4 style="font-size: 1rem; font-weight: 800; color: var(--color-primary); margin-bottom: 1rem;">विद्यार्थी प्रोफ़ाइल विवरण</h4>
+                <form id="studentProfileForm">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label" for="profName">पूरा नाम</label>
+                      <input type="text" id="profName" class="form-control" placeholder="विद्यार्थी का नाम" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="profPhone">मोबाइल नंबर</label>
+                      <input type="tel" id="profPhone" class="form-control" placeholder="उदा: 9829XXXXXX">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="profGoal">मुख्य परीक्षा लक्ष्य</label>
+                    <select id="profGoal" class="form-control">
+                      <option value="RPSC वरिष्ठ अध्यापक (2nd Grade) हिंदी">RPSC वरिष्ठ अध्यापक (2nd Grade) हिंदी</option>
+                      <option value="RPSC स्कूल व्याख्याता (1st Grade) हिंदी">RPSC स्कूल व्याख्याता (1st Grade) हिंदी</option>
+                      <option value="कॉम्बो: 1st एवं 2nd Grade दोनों">कॉम्बो: 1st एवं 2nd Grade दोनों</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="profCity">गृह जिला</label>
+                    <input type="text" id="profCity" class="form-control" placeholder="उदा: बाड़मेर, जोधपुर आदि">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="profAddress">पुस्तक डिलीवरी पता</label>
+                    <textarea id="profAddress" class="form-control" rows="2" placeholder="अपना पूरा डाक पता एवं पिनकोड दर्ज करें"></textarea>
+                  </div>
+
+                  <button type="submit" id="saveProfileBtn" class="btn btn-primary" style="margin-top: 0.5rem;">
+                    <i class="fa-solid fa-floppy-disk mr-1"></i> प्रोफ़ाइल विवरण सुरक्षित करें
+                  </button>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background-color: #0f1e33; color: #94a3b8; padding: 1.5rem 0; font-size: 0.8125rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.1);">
+    <div class="container">
+      © 2015-2026 <strong>भास्कर क्लासेज बाड़मेर</strong> | हेल्पलाइन: 8949287751
+    </div>
+  </footer>
+
+  <!-- Firebase App & Authentication Modules -->
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module" src="student-auth.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>एडमिन पोर्टल | भास्कर क्लासेज बाड़मेर</title>
+  <meta name="description" content="भास्कर क्लासेज बाड़मेर एडमिन पोर्टल - छात्र पूछताछ, पुस्तक ऑर्डर्स, कोर्स एवं सूचना टिकर प्रबंधन।">
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .admin-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--color-bg-alt);
+    }
+    .admin-nav {
+      background-color: #0f1e33;
+      color: #ffffff;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .admin-nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .admin-main {
+      flex: 1;
+      padding: 2.5rem 0;
+    }
+    .admin-card {
+      background-color: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .admin-login-box {
+      max-width: 420px;
+      margin: 3rem auto;
+      padding: 2.5rem 2rem;
+    }
+  </style>
+</head>
+<body class="admin-page">
+
+  <!-- Header Navigation -->
+  <header class="admin-nav">
+    <div class="container admin-nav-inner">
+      <a href="index.html" class="brand" aria-label="भास्कर क्लासेज बाड़मेर" style="display: inline-block; background: #ffffff; padding: 5px 12px; border-radius: var(--radius-btn); box-shadow: var(--shadow-sm);">
+        <img src="new logo for the web.png" alt="भास्कर क्लासेज बाड़मेर - एडमिन पोर्टल" style="height: 42px; width: auto; display: block;" onerror="this.onerror=null; this.src='bhaskar-logo.png';">
+      </a>
+
+      <a href="index.html" class="btn btn-sm btn-outline-white">
+        <i class="fa-solid fa-arrow-left"></i> मुख्य वेबसाइट पर जाएं
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="admin-main">
+    <div class="container">
+
+      <!-- ================= VIEW 1: SECURE FIREBASE ADMIN LOGIN ================= -->
+      <div id="adminLoginView">
+        <div class="admin-card admin-login-box">
+          <div style="text-align: center; margin-bottom: 1.5rem;">
+            <div style="width: 4rem; height: 4rem; border-radius: 50%; background-color: var(--color-primary-light); color: var(--color-primary); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin: 0 auto 0.75rem;">
+              <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <h2 style="font-size: 1.375rem; font-weight: 800; color: var(--color-primary);">सुरक्षित एडमिन पोर्टल</h2>
+            <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+              भास्कर क्लासेज बाड़मेर • अधिकृत नियंत्रण कक्ष
+            </p>
+          </div>
+
+          <!-- Alert Box -->
+          <div id="adminAuthAlertBox" style="display: none; padding: 10px 14px; border-radius: 8px; font-size: 0.825rem; margin-bottom: 1.25rem; line-height: 1.4;"></div>
+
+          <form id="adminLoginForm">
+            <div class="form-group">
+              <label class="form-label" for="adminEmail">एडमिन आईडी (ईमेल)</label>
+              <div style="position: relative;">
+                <input type="email" id="adminEmail" class="form-control" placeholder="उदा: admin@example.com" required autocomplete="username">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="adminPass">एडमिन पासवर्ड</label>
+              <div style="position: relative;">
+                <input type="password" id="adminPass" class="form-control" placeholder="अपना पासवर्ड दर्ज करें" required autocomplete="current-password" style="padding-right: 40px;">
+                <button type="button" id="toggleAdminPassBtn" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #94A3B8; cursor: pointer;">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" id="adminLoginSubmitBtn" class="btn btn-primary btn-full btn-lg" style="margin-top: 1.25rem;">
+              <i class="fa-solid fa-shield-halved"></i> एडमिन लॉगिन करें
+            </button>
+          </form>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); font-size: 0.75rem;">
+            <span style="color: var(--color-text-muted);">संस्थान नियंत्रण कक्ष</span>
+            <a href="https://classplusapp.com/diy/courses/course-list" target="_blank" style="color: var(--color-primary); font-weight: 700;">
+              Classplus DIY →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= VIEW 2: ADMIN DASHBOARD ================= -->
+      <div id="adminDashboardView" style="display: none;">
+        <div class="admin-card">
+          
+          <!-- Top Bar -->
+          <div style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; background-color: var(--color-bg-alt);">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--color-primary);">भास्कर क्लासेज - मुख्य एडमिन पैनल</h2>
+                <span id="adminCurrentEmailBadge" style="background-color: var(--color-primary); color: #ffffff; font-size: 0.6875rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px;">प्रशासक (Admin)</span>
+              </div>
+              <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                बाड़मेर सेंटर • संपर्क: 8949287751 • Classplus Org Code: <strong>bysvk</strong>
+              </p>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <button id="adminExportCsvBtn" class="btn btn-sm btn-outline">
+                <i class="fa-solid fa-file-excel" style="color: var(--color-success);"></i> CSV डाउनलोड
+              </button>
+              <a href="https://classplusapp.com/diy/courses/course-list" target="_blank" class="btn btn-sm btn-outline">
+                <i class="fa-solid fa-cloud"></i> Classplus
+              </a>
+              <button id="adminLogoutBtn" class="btn btn-sm btn-outline" style="color: var(--color-danger); border-color: #fecaca;">
+                <i class="fa-solid fa-power-off"></i> लॉगआउट
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 Stats Cards -->
+          <div style="padding: 1.5rem 2rem 0.5rem;">
+            <div class="kpi-row">
+              <div class="kpi-card">
+                <div class="val" id="adminFirestoreStudentsCount" style="color: var(--color-primary);">0</div>
+                <div class="lbl">Firebase पंजीकृत छात्र</div>
+              </div>
+              <div class="kpi-card">
+                <div class="val">4 बैचेज</div>
+                <div class="lbl">सक्रिय कोर्सेज</div>
+              </div>
+              <div class="kpi-card">
+                <div class="val" id="adminInquiryCount" style="color: var(--color-accent);">0</div>
+                <div class="lbl">वेबसाइट पूछताछ (Leads)</div>
+              </div>
+              <div class="kpi-card">
+                <div class="val" id="adminBookDemandCount">0</div>
+                <div class="lbl">पुस्तक ऑर्डर मांग</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabs Navigation -->
+          <div style="padding: 0 2rem;">
+            <div class="tab-nav">
+              <button class="tab-btn active" data-admin-tab="adminTabStudents"><i class="fa-solid fa-users-gear"></i> छात्र प्रबंधन व अनुमतियाँ</button>
+              <button class="tab-btn" data-admin-tab="adminTabInquiries"><i class="fa-solid fa-envelope-open-text"></i> छात्र पूछताछ (Leads)</button>
+              <button class="tab-btn" data-admin-tab="adminTabOrders"><i class="fa-solid fa-truck"></i> पुस्तक ऑर्डर्स (Leads)</button>
+              <button class="tab-btn" data-admin-tab="adminTabCourses"><i class="fa-solid fa-graduation-cap"></i> कोर्स व फीस प्रबंधन</button>
+              <button class="tab-btn" data-admin-tab="adminTabTicker"><i class="fa-solid fa-bullhorn"></i> सूचना टिकर अपडेट</button>
+              <button class="tab-btn" data-admin-tab="adminTabPhotos"><i class="fa-solid fa-images"></i> पोस्टर ग्राफ़िक्स</button>
+              <button class="tab-btn" data-admin-tab="adminTabSecurity"><i class="fa-solid fa-shield-halved"></i> पासवर्ड व सुरक्षा</button>
+            </div>
+          </div>
+
+          <!-- Tab Contents Body -->
+          <div style="padding: 1.5rem 2rem 2.5rem;">
+
+            <!-- Tab 0: Students Firestore Management (Permissions & Book Delivery) -->
+            <div id="adminTabStudents" class="tab-panel active">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+                <div>
+                  <h3 style="font-size: 1.05rem; font-weight: 800; color: var(--color-primary);">Firebase पंजीकृत छात्र • अनुमतियाँ एवं पुस्तक डिलीवरी प्रबंधन</h3>
+                  <p style="font-size: 0.8125rem; color: var(--color-text-muted);">यहाँ से आप किसी भी विद्यार्थी को टेस्ट सीरीज, ई-नोट्स दे सकते हैं तथा पुस्तक डिस्पैच स्थिति अपडेट कर सकते हैं।</p>
+                </div>
+                <button id="adminRefreshStudentsBtn" class="btn btn-sm btn-outline">
+                  <i class="fa-solid fa-arrows-rotate"></i> ताज़ा करें (Refresh)
+                </button>
+              </div>
+
+              <!-- Students List Table -->
+              <div class="table-responsive">
+                <table class="clean-table">
+                  <thead>
+                    <tr>
+                      <th>विद्यार्थी विवरण</th>
+                      <th>मोबाइल / लक्ष्य</th>
+                      <th>ई-नोट्स एक्सेस</th>
+                      <th>टेस्ट सीरीज एक्सेस</th>
+                      <th>पुस्तक डिलीवरी स्थिति</th>
+                      <th>डाक ट्रैकिंग नंबर</th>
+                      <th style="text-align: right;">एक्शन</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminStudentsTableBody">
+                    <tr>
+                      <td colspan="7" style="text-align: center; padding: 2rem; color: var(--color-text-muted);">
+                        <i class="fa-solid fa-spinner fa-spin mr-2"></i> Firestore से पंजीकृत छात्रों की सूची लोड हो रही है...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Tab 1: Leads -->
+            <div id="adminTabInquiries" class="tab-panel">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <h3 style="font-size: 0.9375rem; font-weight: 800; color: var(--color-primary);">वेबसाइट से प्राप्त नवीनतम छात्र पूछताछ</h3>
+                <button id="adminResetLeadsBtn" style="font-size: 0.75rem; color: var(--color-danger); text-decoration: underline; background: none; border: none; cursor: pointer;">
+                  <i class="fa-solid fa-trash-can"></i> डेटा रीसेट करें
+                </button>
+              </div>
+
+              <div class="table-responsive">
+                <table class="clean-table">
+                  <thead>
+                    <tr>
+                      <th>छात्र का नाम</th>
+                      <th>मोबाइल नंबर</th>
+                      <th>चयनित कोर्स / पुस्तक</th>
+                      <th>जिला / शहर</th>
+                      <th>दिनांक</th>
+                      <th style="text-align: right;">त्वरित एक्शन</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminInquiryTableBody">
+                    <!-- Dynamically populated via script.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Tab 2: Orders -->
+            <div id="adminTabOrders" class="tab-panel">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <h3 style="font-size: 0.9375rem; font-weight: 800; color: var(--color-primary);">मंदार पब्लिकेशन - पुस्तक डिस्पैच ट्रैकिंग</h3>
+                <span style="font-size: 0.75rem; color: var(--color-text-muted);">भारतीय डाक स्पीड पोस्ट</span>
+              </div>
+
+              <div class="table-responsive">
+                <table class="clean-table">
+                  <thead>
+                    <tr>
+                      <th>ऑर्डर आईडी</th>
+                      <th>ग्राहक / विद्यार्थी</th>
+                      <th>पुस्तक विवरण</th>
+                      <th>पिनकोड व पता</th>
+                      <th>स्थिति (Status)</th>
+                      <th style="text-align: right;">एक्शन</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>#BK-9421</strong></td>
+                      <td>सुरेश कुमार (9829187712)</td>
+                      <td>राजस्थान राजनीतिक एवं प्रशासनिक व्यवस्था (₹250)</td>
+                      <td>बालोतरा (राज.) - 344022</td>
+                      <td><span style="color: var(--color-success); font-weight: 700; background-color: var(--color-success-light); padding: 0.15rem 0.5rem; border-radius: 4px;">डिस्पैच पूर्ण</span></td>
+                      <td style="text-align: right;"><a href="https://wa.me/918949287751" target="_blank" class="btn btn-sm btn-outline">मैसेज</a></td>
+                    </tr>
+                    <tr>
+                      <td><strong>#BK-9422</strong></td>
+                      <td>कविता विश्नोई (9414212345)</td>
+                      <td>राजस्थान राजनीतिक एवं प्रशासनिक व्यवस्था (₹250)</td>
+                      <td>चौहटन, बाड़मेर - 344702</td>
+                      <td><span style="color: var(--color-accent); font-weight: 700; background-color: #fff7ed; padding: 0.15rem 0.5rem; border-radius: 4px;">पैकिंग प्रगति पर</span></td>
+                      <td style="text-align: right;"><a href="https://wa.me/918949287751" target="_blank" class="btn btn-sm btn-outline">मैसेज</a></td>
+                    </tr>
+                    <tr>
+                      <td><strong>#BK-9423</strong></td>
+                      <td>रमेश दान (9782811223)</td>
+                      <td>हिन्दी साहित्य : वस्तुनिष्ठ इतिहास (₹200)</td>
+                      <td>बायतु, बाड़मेर - 344034</td>
+                      <td><span style="color: var(--color-primary); font-weight: 700; background-color: var(--color-primary-light); padding: 0.15rem 0.5rem; border-radius: 4px;">नया ऑर्डर</span></td>
+                      <td style="text-align: right;"><a href="https://wa.me/918949287751" target="_blank" class="btn btn-sm btn-outline">मैसेज</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Tab 3: Courses & Fees -->
+            <div id="adminTabCourses" class="tab-panel">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <h3 style="font-size: 0.9375rem; font-weight: 800; color: var(--color-primary);">ऑनलाइन कोर्स एवं फीस प्रबंधन</h3>
+                <span style="font-size: 0.75rem; color: var(--color-text-muted);">Classplus DIY Engine</span>
+              </div>
+
+              <div class="table-responsive">
+                <table class="clean-table">
+                  <thead>
+                    <tr>
+                      <th>कोर्स का नाम</th>
+                      <th>श्रेणी</th>
+                      <th>वर्तमान फीस</th>
+                      <th>MRP</th>
+                      <th>वैधता</th>
+                      <th style="text-align: right;">प्रबंधन</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>स्कूल व्याख्याता (1st Grade Hindi)</strong></td>
+                      <td>RPSC 1st Grade</td>
+                      <td><strong>₹6,510</strong></td>
+                      <td style="color: var(--color-text-muted); text-decoration: line-through;">₹15,010</td>
+                      <td>15 माह</td>
+                      <td style="text-align: right;"><a href="https://classplusapp.com/diy/courses/course-list" target="_blank" class="btn btn-sm btn-outline">संपादित करें</a></td>
+                    </tr>
+                    <tr>
+                      <td><strong>वरिष्ठ अध्यापक (2nd Grade Hindi)</strong></td>
+                      <td>RPSC 2nd Grade</td>
+                      <td><strong>₹6,510</strong></td>
+                      <td style="color: var(--color-text-muted); text-decoration: line-through;">₹15,010</td>
+                      <td>15 माह</td>
+                      <td style="text-align: right;"><a href="https://classplusapp.com/diy/courses/course-list" target="_blank" class="btn btn-sm btn-outline">संपादित करें</a></td>
+                    </tr>
+                    <tr>
+                      <td><strong>काव्य शास्त्र एवं विधाएँ</strong></td>
+                      <td>विशेष बैच</td>
+                      <td><strong>₹1,509</strong></td>
+                      <td style="color: var(--color-text-muted); text-decoration: line-through;">₹4,210</td>
+                      <td>6 माह</td>
+                      <td style="text-align: right;"><a href="https://classplusapp.com/diy/courses/course-list" target="_blank" class="btn btn-sm btn-outline">संपादित करें</a></td>
+                    </tr>
+                    <tr>
+                      <td><strong>ऑनलाइन अभ्यास टेस्ट सीरीज</strong></td>
+                      <td>टेस्ट सीरीज</td>
+                      <td><strong>₹109</strong></td>
+                      <td style="color: var(--color-text-muted); text-decoration: line-through;">₹1,510</td>
+                      <td>परीक्षा तक</td>
+                      <td style="text-align: right;"><a href="https://classplusapp.com/diy/courses/course-list" target="_blank" class="btn btn-sm btn-outline">संपादित करें</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Tab 4: Ticker Announcement -->
+            <div id="adminTabTicker" class="tab-panel" style="max-width: 620px;">
+              <h3 style="font-size: 0.9375rem; font-weight: 800; color: var(--color-primary); margin-bottom: 0.5rem;">वेबसाइट शीर्ष सूचना टिकर संदेश बदलें</h3>
+              <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 1rem;">यहाँ दर्ज किया गया संदेश तुरंत मुख्य वेबसाइट की शीर्ष सूचना पट्टी पर प्रदर्शित होने लगेगा।</p>
+              
+              <form id="adminTickerForm">
+                <div class="form-group">
+                  <label class="form-label" for="adminTickerInput">नया सूचना संदेश</label>
+                  <textarea id="adminTickerInput" class="form-control" rows="3" placeholder="जैसे: आरपीएससी 1st व 2nd ग्रेड हिंदी का नया ऑफलाइन बैच बाड़मेर सेंटर पर प्रारंभ..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fa-solid fa-bullhorn"></i> सूचना पट्टी अपडेट करें
+                </button>
+              </form>
+            </div>
+
+            <!-- Tab 5: Topper Photo / Poster Manager -->
+            <div id="adminTabPhotos" class="tab-panel">
+              <h3 style="font-size: 0.9375rem; font-weight: 800; color: var(--color-primary); margin-bottom: 0.5rem;">टॉपर्स पोस्टर / ग्राफ़िक्स कार्ड मैनेजर</h3>
+              <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">यहाँ आप पूरा डिज़ाइन किया हुआ पोस्टर/ग्राफ़िक कार्ड अपलोड करें (जिसमें फ़ोटो, नाम, रैंक पहले से मौजूद हो)। नया ग्राफ़िक अपलोड करते ही वह मुख्य वेबसाइट के कार्ड में तुरंत प्रदर्शित हो जाएगा।</p>
+              
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1.25rem;">
+                <!-- Card 1 -->
+                <div style="background: #ffffff; border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: 1rem; text-align: center; box-shadow: var(--shadow-sm);">
+                  <div style="font-size: 0.8125rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.5rem;">पोस्टर 1 (2nd Grade)</div>
+                  <div style="aspect-ratio: 1/1; width: 100%; max-width: 160px; margin: 0 auto 0.75rem auto; border-radius: var(--radius-btn); overflow: hidden; border: 1px solid var(--color-border); background: var(--color-bg-alt);">
+                    <img id="adminThumb1" src="5b65b4ef.jpeg" alt="टॉपर कार्ड 1" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                  </div>
+                  <button onclick="triggerPhotoPick(1)" class="btn btn-sm btn-outline btn-full"><i class="fa-solid fa-cloud-arrow-up"></i> नया पोस्टर अपलोड करें</button>
+                </div>
+
+                <!-- Card 2 -->
+                <div style="background: #ffffff; border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: 1rem; text-align: center; box-shadow: var(--shadow-sm);">
+                  <div style="font-size: 0.8125rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.5rem;">पोस्टर 2 (2nd Grade)</div>
+                  <div style="aspect-ratio: 1/1; width: 100%; max-width: 160px; margin: 0 auto 0.75rem auto; border-radius: var(--radius-btn); overflow: hidden; border: 1px solid var(--color-border); background: var(--color-bg-alt);">
+                    <img id="adminThumb2" src="127c83a1.jpeg" alt="टॉपर कार्ड 2" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                  </div>
+                  <button onclick="triggerPhotoPick(2)" class="btn btn-sm btn-outline btn-full"><i class="fa-solid fa-cloud-arrow-up"></i> नया पोस्टर अपलोड करें</button>
+                </div>
+
+                <!-- Card 3 -->
+                <div style="background: #ffffff; border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: 1rem; text-align: center; box-shadow: var(--shadow-sm);">
+                  <div style="font-size: 0.8125rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.5rem;">पोस्टर 3 (2nd Grade)</div>
+                  <div style="aspect-ratio: 1/1; width: 100%; max-width: 160px; margin: 0 auto 0.75rem auto; border-radius: var(--radius-btn); overflow: hidden; border: 1px solid var(--color-border); background: var(--color-bg-alt);">
+                    <img id="adminThumb3" src="भास्कर क्लासेज, बाड़मेर (1500 x 1500 px) (22).jpg" alt="टॉपर कार्ड 3" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                  </div>
+                  <button onclick="triggerPhotoPick(3)" class="btn btn-sm btn-outline btn-full"><i class="fa-solid fa-cloud-arrow-up"></i> नया पोस्टर अपलोड करें</button>
+                </div>
+
+                <!-- Card 4 -->
+                <div style="background: #ffffff; border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: 1rem; text-align: center; box-shadow: var(--shadow-sm);">
+                  <div style="font-size: 0.8125rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.5rem;">पोस्टर 4 (1st Grade)</div>
+                  <div style="aspect-ratio: 1/1; width: 100%; max-width: 160px; margin: 0 auto 0.75rem auto; border-radius: var(--radius-btn); overflow: hidden; border: 1px solid var(--color-border); background: var(--color-bg-alt);">
+                    <img id="adminThumb4" src="भास्कर क्लासेज, बाड़मेर (1500 x 1500 px) (26).png" alt="टॉपर कार्ड 4" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                  </div>
+                  <button onclick="triggerPhotoPick(4)" class="btn btn-sm btn-outline btn-full"><i class="fa-solid fa-cloud-arrow-up"></i> नया पोस्टर अपलोड करें</button>
+                </div>
+
+                <!-- Card 5 -->
+                <div style="background: #ffffff; border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: 1rem; text-align: center; box-shadow: var(--shadow-sm);">
+                  <div style="font-size: 0.8125rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.5rem;">पोस्टर 5 (1st Grade)</div>
+                  <div style="aspect-ratio: 1/1; width: 100%; max-width: 160px; margin: 0 auto 0.75rem auto; border-radius: var(--radius-btn); overflow: hidden; border: 1px solid var(--color-border); background: var(--color-bg-alt);">
+                    <img id="adminThumb5" src="ddabcd20.jpeg" alt="टॉपर कार्ड 5" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                  </div>
+                  <button onclick="triggerPhotoPick(5)" class="btn btn-sm btn-outline btn-full"><i class="fa-solid fa-cloud-arrow-up"></i> नया पोस्टर अपलोड करें</button>
+                </div>
+
+                <!-- Card 6 -->
+                <div style="background: #ffffff; border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: 1rem; text-align: center; box-shadow: var(--shadow-sm);">
+                  <div style="font-size: 0.8125rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.5rem;">पोस्टर 6 (1st Grade)</div>
+                  <div style="aspect-ratio: 1/1; width: 100%; max-width: 160px; margin: 0 auto 0.75rem auto; border-radius: var(--radius-btn); overflow: hidden; border: 1px solid var(--color-border); background: var(--color-bg-alt);">
+                    <img id="adminThumb6" src="भास्कर क्लासेज, बाड़मेर (1500 x 1500 px) (25).png" alt="टॉपर कार्ड 6" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                  </div>
+                  <button onclick="triggerPhotoPick(6)" class="btn btn-sm btn-outline btn-full"><i class="fa-solid fa-cloud-arrow-up"></i> नया पोस्टर अपलोड करें</button>
+                </div>
+              </div>
+
+              <!-- Universal photo file input -->
+              <input type="file" id="universalPhotoInput" style="display: none;" accept="image/*">
+            </div>
+
+            <!-- Tab 6: Password Security -->
+            <div id="adminTabSecurity" class="tab-panel" style="max-width: 540px;">
+              <h3 style="font-size: 1rem; font-weight: 800; color: var(--color-primary); margin-bottom: 0.5rem;">एडमिन पासवर्ड बदलें (Change Password)</h3>
+              <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">
+                यह पासवर्ड केवल आपके ब्राउज़र में सुरक्षित रूप से एनक्रिप्टेड रहेगा। सोर्स कोड में कोई पासवर्ड नहीं है।
+              </p>
+
+              <form id="changeAdminPassForm">
+                <div class="form-group">
+                  <label class="form-label" for="currAdminPass">वर्तमान पासवर्ड</label>
+                  <input type="password" id="currAdminPass" class="form-control" placeholder="वर्तमान पासवर्ड दर्ज करें" required autocomplete="current-password">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="newAdminPass">नया गुप्त पासवर्ड</label>
+                  <input type="password" id="newAdminPass" class="form-control" placeholder="नया पासवर्ड दर्ज करें (न्यूनतम 4 अक्षर)" required minlength="4" autocomplete="new-password">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="newAdminPassConfirm">नए पासवर्ड की पुष्टि</label>
+                  <input type="password" id="newAdminPassConfirm" class="form-control" placeholder="नया पासवर्ड पुनः दर्ज करें" required minlength="4" autocomplete="new-password">
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">
+                  <i class="fa-solid fa-lock"></i> नया पासवर्ड सहेजें
+                </button>
+              </form>
+
+              <div style="margin-top: 1.5rem; padding: 1rem; background-color: var(--color-bg-alt); border: 1px solid var(--color-border); border-radius: var(--radius-btn); font-size: 0.75rem; color: var(--color-text-muted);">
+                <div style="font-weight: 700; color: var(--color-primary); margin-bottom: 0.25rem;">
+                  <i class="fa-solid fa-circle-check" style="color: var(--color-success);"></i> सुरक्षा ऑडिट स्थिति:
+                </div>
+                <div>• एल्गोरिदम: Web Crypto API SHA-256 Hashed + Unique Institute Salt</div>
+                <div>• कोड स्थिति: सोर्स कोड में शून्य प्लेनटेक्स्ट पासवर्ड (Zero hardcoded passwords)</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background-color: #0f1e33; color: #94a3b8; padding: 1.5rem 0; font-size: 0.8125rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.1);">
+    <div class="container">
+      © 2015-2026 <strong>भास्कर क्लासेज बाड़मेर</strong> | हेल्पलाइन: 8949287751
+    </div>
+  </footer>
+
+  <!-- Firebase App & Authentication Module -->
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module" src="admin-auth.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
