@@ -43,7 +43,7 @@ const server = http.createServer((req, res) => {
       try { execSync(`${gitBin} remote remove origin`, { cwd: PUBLIC_DIR, encoding: 'utf8' }); } catch(e){}
       execSync(`${gitBin} remote add origin ${repoUrl}`, { cwd: PUBLIC_DIR, encoding: 'utf8' });
       execSync(`${gitBin} branch -M main`, { cwd: PUBLIC_DIR, encoding: 'utf8' });
-      log.push(execSync(`${gitBin} push -u origin main`, { cwd: PUBLIC_DIR, encoding: 'utf8' }));
+      log.push(execSync(`${gitBin} push -u origin main --force`, { cwd: PUBLIC_DIR, encoding: 'utf8' }));
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: true, log }));
     } catch(err) {
