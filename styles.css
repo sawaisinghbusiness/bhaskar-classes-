@@ -1769,22 +1769,41 @@ body:not(.portal-page):not(.admin-page) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 1.25rem;
+  padding-top: 1rem;
   border-top: 1px solid var(--color-border);
-  flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.75rem;
+}
+
+.book-card-price {
+  flex: 1;
+  min-width: 0;
 }
 
 .book-card-price .price {
-  font-size: 1.625rem;
+  font-size: 1.5rem;
   font-weight: 800;
   color: var(--color-primary);
+  white-space: nowrap;
+  line-height: 1.2;
 }
 
 .book-card-price .note {
-  font-size: 0.6875rem;
+  font-size: 0.72rem;
   color: var(--color-text-muted);
   display: block;
+  margin-top: 2px;
+}
+
+.book-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.book-card-footer .btn {
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* Combo Offer Banner - Clean Institutional Card Matching Test Series Banner */
@@ -3156,7 +3175,6 @@ textarea.form-control {
   .test-series-action .btn,
   .combo-banner .btn,
   .book-offer-actions .btn,
-  .book-card-footer .btn,
   .faculty-actions .btn,
   .contact-form-wrap .btn,
   .index-modal-footer .btn {
@@ -3346,10 +3364,22 @@ textarea.form-control {
   }
 
   .book-card-footer {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
     width: 100%;
+  }
+
+  .book-card-price .price {
+    font-size: 1.3rem;
+  }
+
+  .book-card-footer .btn {
+    width: auto !important;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    white-space: nowrap;
   }
 
   /* Toppers Grid */
