@@ -1612,6 +1612,18 @@ body:not(.portal-page):not(.admin-page) {
   border-radius: var(--radius-pill);
 }
 
+.topper-swipe-hint {
+  display: none;
+  font-size: 0.75rem;
+  color: #0284C7;
+  font-weight: 700;
+  background: #E0F2FE;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  align-items: center;
+  gap: 5px;
+}
+
 .toppers-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -3517,15 +3529,40 @@ textarea.form-control {
     font-size: 1.5rem;
   }
 
-  /* Toppers Grid */
-  .toppers-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+  .topper-swipe-hint {
+    display: inline-flex;
   }
 
-  .topper-card {
-    padding: 0;
+  /* Toppers Horizontal Snap-Scroll Carousel (Like Demo Classes) */
+  .toppers-grid {
+    display: flex !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    gap: 16px;
+    padding-bottom: 16px;
+    padding-top: 4px;
+    padding-left: 2px;
+    padding-right: 16px;
+    margin-bottom: 2rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .toppers-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .toppers-grid .topper-card {
+    flex: 0 0 86% !important;
+    min-width: 260px;
+    max-width: 320px;
+    scroll-snap-align: center;
+    border-radius: 14px;
     overflow: hidden;
+    box-shadow: 0 6px 18px rgba(30, 43, 88, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border: 1px solid #E2E8F0;
   }
 
   .topper-photo-wrap {
@@ -3533,6 +3570,20 @@ textarea.form-control {
     height: auto;
     aspect-ratio: 1 / 1;
     margin: 0;
+    background: #F1F5F9;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .topper-photo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
   }
 
   /* Demo Videos Horizontal Snap-Scroll Carousel */
