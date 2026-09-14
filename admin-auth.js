@@ -190,13 +190,14 @@ function initAdminFirebaseListener() {
       const isAdmin = await verifyAdminRole(user);
 
       if (!isAdmin) {
-        // Immediate rejection & sign out
-        await signOut(auth);
+        // Keep student session intact in Firebase! Do NOT signOut(auth)!
         localStorage.removeItem('bhaskar_admin_logged_in');
+        sessionStorage.removeItem('bhaskar_portal_mode');
         if (loginView) loginView.style.display = 'block';
         if (setupView) setupView.style.display = 'none';
         if (dashboardView) dashboardView.style.display = 'none';
-        showAdminAlert('अनाधिकृत प्रवेश! केवल अधिकृत एडमिन ही लॉगिन कर सकते हैं।', 'error');
+        const studentIdentifier = user.displayName || user.email || 'विद्यार्थी';
+        showAdminAlert(`आप वर्तमान में विद्यार्थी खाते (${studentIdentifier}) से लॉगिन हैं। एडमिन पैनल खोलने हेतु कृपया अधिकृत एडमिन ईमेल से लॉगिन करें।`, 'info');
         return;
       }
 

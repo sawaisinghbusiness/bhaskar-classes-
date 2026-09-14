@@ -142,25 +142,157 @@
 </head>
 <body class="portal-page">
 
-  <!-- Header Navigation with LOGOUT button on student page -->
+  <!-- Header Navigation -->
   <header class="portal-nav">
     <div class="container portal-nav-inner">
       <a href="index.html" class="brand" aria-label="भास्कर क्लासेज बाड़मेर">
-        <img src="new logo for the web.png" alt="भास्कर क्लासेज बाड़मेर - विद्यार्थी पोर्टल" style="height: 48px; width: auto; display: block;" onerror="this.onerror=null; this.src='bhaskar-logo.png';">
+        <img src="new logo for the web.png" alt="भास्कर क्लासेज बाड़मेर - विद्यार्थी पोर्टल" style="height: 46px; width: auto; display: block;" onerror="this.onerror=null; this.src='bhaskar-logo.png';">
       </a>
 
-      <!-- Logout Button in top header of student dashboard -->
-      <button type="button" id="studentHeaderLogoutBtn" class="btn btn-sm btn-outline" style="color: #ef4444; border-color: #fca5a5; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; background: #fff;">
-        <i class="fa-solid fa-right-from-bracket"></i> लॉगआउट
-      </button>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <a href="index.html" class="btn btn-sm btn-outline" style="font-weight: 600;">
+          <i class="fa-solid fa-arrow-left"></i> <span>मुख्य वेबसाइट</span>
+        </a>
+
+        <!-- Dynamic Logout Button (visible only when student is logged in) -->
+        <button type="button" id="studentHeaderLogoutBtn" class="btn btn-sm btn-outline" style="display: none; color: #ef4444; border-color: #fca5a5; font-weight: 700; align-items: center; gap: 6px; cursor: pointer; background: #fff;">
+          <i class="fa-solid fa-right-from-bracket"></i> लॉगआउट
+        </button>
+      </div>
     </div>
   </header>
 
   <!-- Main Portal Content -->
   <main class="portal-main">
     <div class="container">
-<!-- ================= VIEW 2: UTKARSH-STYLE STUDENT DASHBOARD ================= -->
-      <div id="studentDashboardView">
+
+      <!-- ================= VIEW 0: AUTH STATE LOADER (Prevents FOUC & Flicker) ================= -->
+      <div id="studentAuthLoading" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 48vh; text-align: center; padding: 2rem;">
+        <div class="auth-loader-spinner" style="margin-bottom: 1.25rem;"></div>
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.35rem;">सत्यापन जारी है...</h3>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted);">कृपया प्रतीक्षा करें, आपका विद्यार्थी सत्र लोड हो रहा है</p>
+      </div>
+
+      <!-- ================= VIEW 1: STUDENT LOGIN & REGISTRATION ================= -->
+      <div id="studentLoginView" style="display: none;">
+        <div class="portal-card portal-login-box">
+          <div style="text-align: center; margin-bottom: 1.5rem;">
+            <div style="background-color: #ffffff; border: 1px solid var(--color-border); border-radius: var(--radius-btn); display: inline-block; padding: 6px 14px; margin: 0 auto 0.75rem; box-shadow: var(--shadow-sm);">
+              <img src="new logo for the web.png" alt="भास्कर क्लासेज बाड़मेर" style="height: 46px; width: auto; display: block;" onerror="this.onerror=null; this.src='bhaskar-logo.png';">
+            </div>
+            <h2 style="font-size: 1.45rem; font-weight: 800; color: var(--color-primary);">विद्यार्थी लॉगिन पोर्टल</h2>
+            <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+              भास्कर क्लासेज बाड़मेर • विद्यार्थी डैशबोर्ड एवं ट्रैकिंग
+            </p>
+          </div>
+
+          <!-- Alert box for success / error notifications -->
+          <div id="authAlertBox" style="display: none; padding: 10px 14px; border-radius: 8px; font-size: 0.825rem; margin-bottom: 1.25rem; line-height: 1.4;"></div>
+
+          <!-- 1. GOOGLE ONE-CLICK SIGN IN -->
+          <button type="button" id="googleSignInBtn" class="btn btn-full btn-lg" style="background:#FFFFFF; color:#1E2B58; border:1.5px solid #CBD5E1; display:flex; align-items:center; justify-content:center; gap:12px; font-weight:600; box-shadow: 0 2px 6px rgba(30,43,88,0.06); transition: all 0.2s ease;">
+            <svg width="20" height="20" viewBox="0 0 48 48">
+              <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+              <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+              <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+              <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+            </svg>
+            <span>Google से एक-क्लिक लॉगिन करें</span>
+          </button>
+
+          <!-- Divider -->
+          <div style="display:flex; align-items:center; gap:12px; margin: 1.5rem 0; color:#94A3B8; font-size:0.8rem;">
+            <span style="flex:1; height:1px; background:#E2E8F0;"></span>
+            <span>या ईमेल द्वारा</span>
+            <span style="flex:1; height:1px; background:#E2E8F0;"></span>
+          </div>
+
+          <!-- Tab Selector: Login vs Register -->
+          <div style="display: flex; background: #F1F5F9; border-radius: 8px; padding: 4px; margin-bottom: 1.25rem;">
+            <button type="button" id="tabBtnLogin" class="auth-tab-btn active" style="flex: 1; padding: 8px; font-size: 0.875rem; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s; background: #FFFFFF; color: #1E2B58; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+              लॉगिन करें
+            </button>
+            <button type="button" id="tabBtnRegister" class="auth-tab-btn" style="flex: 1; padding: 8px; font-size: 0.875rem; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s; background: transparent; color: #64748B;">
+              नया रजिस्ट्रेशन
+            </button>
+          </div>
+
+          <!-- 2. EMAIL/PASSWORD LOGIN FORM -->
+          <form id="emailLoginForm">
+            <div class="form-group">
+              <label class="form-label" for="loginEmail">ईमेल आईडी</label>
+              <input type="email" id="loginEmail" class="form-control" placeholder="उदा: student@gmail.com" required autocomplete="username">
+            </div>
+
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <label class="form-label" for="loginPassword" style="margin-bottom: 0;">पासवर्ड</label>
+                <button type="button" id="forgotPasswordBtn" style="background: none; border: none; color: var(--color-accent); font-size: 0.775rem; font-weight: 600; cursor: pointer; padding: 0;">पासवर्ड भूल गए?</button>
+              </div>
+              <div style="position: relative;">
+                <input type="password" id="loginPassword" class="form-control" placeholder="अपना पासवर्ड दर्ज करें" required minlength="6" autocomplete="current-password" style="padding-right: 40px;">
+                <button type="button" class="toggle-pass-btn" data-target="loginPassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #94A3B8; cursor: pointer;">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" id="emailLoginSubmitBtn" class="btn btn-primary btn-full btn-lg" style="margin-top: 1rem;">
+              <span>लॉगिन करें</span> <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </form>
+
+          <!-- 3. EMAIL/PASSWORD REGISTRATION FORM -->
+          <form id="emailRegisterForm" style="display: none;">
+            <div class="form-group">
+              <label class="form-label" for="regName">पूरा नाम (Full Name)</label>
+              <input type="text" id="regName" class="form-control" placeholder="उदा: रमेश कुमार" required autocomplete="name">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="regEmail">ईमेल आईडी (Email ID)</label>
+              <input type="email" id="regEmail" class="form-control" placeholder="उदा: student@gmail.com" required autocomplete="email">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="regPhone">मोबाइल नंबर (Mobile No.)</label>
+              <input type="tel" id="regPhone" class="form-control" placeholder="उदा: 9829XXXXXX" required autocomplete="tel">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="regPassword">पासवर्ड बनाएं (कम से कम 6 अक्षर)</label>
+              <div style="position: relative;">
+                <input type="password" id="regPassword" class="form-control" placeholder="नया पासवर्ड" required minlength="6" autocomplete="new-password" style="padding-right: 40px;">
+                <button type="button" class="toggle-pass-btn" data-target="regPassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #94A3B8; cursor: pointer;">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" id="emailRegisterSubmitBtn" class="btn btn-accent btn-full btn-lg" style="margin-top: 1rem;">
+              <span>खाता बनाएं एवं लॉगिन करें</span> <i class="fa-solid fa-user-plus"></i>
+            </button>
+          </form>
+
+          <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); text-align: center; font-size: 0.8125rem; color: var(--color-text-muted);">
+            खाता या कोर्स सहायता हेतु हेल्पलाइन: <a href="tel:8949287751" style="color: var(--color-primary); font-weight: 700;">8949287751</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= VIEW 2: UTKARSH-STYLE STUDENT DASHBOARD ================= -->
+      <div id="studentDashboardView" style="display: none;">
+        
+        <!-- Admin Notice Banner (Shown ONLY if logged-in account is also an admin) -->
+        <div id="adminModeBanner" style="display: none; background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF; border-radius: var(--radius-card); padding: 10px 16px; margin-bottom: 1rem; font-size: 0.875rem; font-weight: 600; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-shield-halved" style="font-size: 1.1rem; color: #2563EB;"></i>
+            <span>आप अधिकृत व्यवस्थापक (Admin) हैं। आप यहाँ विद्यार्थी दृश्य देख रहे हैं।</span>
+          </div>
+          <a href="admin.html" class="btn btn-sm btn-primary" style="padding: 5px 12px; font-size: 0.8rem;">
+            एडमिन पैनल खोलें <i class="fa-solid fa-arrow-right ml-1"></i>
+          </a>
+        </div>
         <div class="portal-card">
           
           <!-- Alert container for pending book order execution -->

@@ -1,24 +1,293 @@
 /**
- * Bhaskar Classes Barmer - Student Dashboard Module
+ * Bhaskar Classes Barmer - Student Unified Portal (Auth + Dashboard) Module
  */
 import { 
   auth, 
   db,
   doc,
   getDoc,
+  setDoc,
   updateDoc,
+  googleProvider,
   onSnapshot,
   onAuthStateChanged,
+  signInWithPopup, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  sendPasswordResetEmail, 
   signOut,
   updateProfile 
 } from "./firebase-config.js";
 
 document.addEventListener('DOMContentLoaded', () => {
+  initAuthUI();
   initDashboardTabs();
-  initDashboardAuthListener();
   initLogoutHandler();
   initProfileForm();
+  initDashboardAuthListener();
 });
+
+// ================= AUTH UI & HELPERS =================
+function showAlert(message, type = 'error') {
+  const alertBox = document.getElementById('authAlertBox');
+  if (!alertBox) return;
+
+  alertBox.style.display = 'block';
+  if (type === 'error') {
+    alertBox.style.backgroundColor = '#FEE2E2';
+    alertBox.style.color = '#B91C1C';
+    alertBox.style.border = '1px solid #F87171';
+    alertBox.innerHTML = '<i class="fa-solid fa-circle-exclamation mr-1"></i> ' + message;
+  } else if (type === 'success') {
+    alertBox.style.backgroundColor = '#DCFCE7';
+    alertBox.style.color = '#15803D';
+    alertBox.style.border = '1px solid #86EFAC';
+    alertBox.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> ' + message;
+  } else {
+    alertBox.style.backgroundColor = '#E0F2FE';
+    alertBox.style.color = '#0284C7';
+    alertBox.style.border = '1px solid #7DD3FC';
+    alertBox.innerHTML = '<i class="fa-solid fa-circle-info mr-1"></i> ' + message;
+  }
+}
+
+function hideAlert() {
+  const alertBox = document.getElementById('authAlertBox');
+  if (alertBox) alertBox.style.display = 'none';
+}
+
+function getHindiErrorMessage(errorCode) {
+  switch (errorCode) {
+    case 'auth/invalid-email':
+      return 'कृपया एक मान्य ईमेल पता दर्ज करें।';
+    case 'auth/user-disabled':
+      return 'यह खाता अक्षम कर दिया गया है। सहायता हेतु हेल्पलाइन पर संपर्क करें।';
+    case 'auth/user-not-found':
+      return 'इस ईमेल से कोई खाता पंजीकृत नहीं है। कृपया नया रजिस्ट्रेशन करें।';
+    case 'auth/wrong-password':
+    case 'auth/invalid-credential':
+      return 'अमान्य ईमेल या पासवर्ड। कृपया पुनः जांच कर प्रयास करें।';
+    case 'auth/email-already-in-use':
+      return 'यह ईमेल पहले से पंजीकृत है। कृपया लॉगिन करें या दूसरा ईमेल चुनें।';
+    case 'auth/weak-password':
+      return 'पासवर्ड कमजोर है। कृपया कम से कम 6 अक्षरों का सुरक्षित पासवर्ड दर्ज करें।';
+    case 'auth/popup-closed-by-user':
+      return 'Google लॉगिन पॉपअप बंद कर दिया गया। पुनः प्रयास करें।';
+    case 'auth/cancelled-popup-request':
+      return 'लॉगिन अनुरोध रद्द कर दिया गया।';
+    case 'auth/popup-blocked':
+      return 'ब्राउज़र ने लॉगिन पॉपअप को ब्लॉक कर दिया। कृपया पॉपअप की अनुमति दें।';
+    case 'auth/unauthorized-domain':
+      return 'यह डोमेन Firebase Authentication के लिए अधिकृत नहीं है।';
+    case 'auth/network-request-failed':
+      return 'नेटवर्क त्रुटि। कृपया अपना इंटरनेट कनेक्शन जांचें।';
+    case 'auth/too-many-requests':
+      return 'बहुत अधिक असफल प्रयास। कृपया थोड़ी देर बाद प्रयास करें।';
+    default:
+      return 'प्रमाणीकरण में त्रुटि आई। कृपया पुनः प्रयास करें। (' + errorCode + ')';
+  }
+}
+
+function initAuthUI() {
+  const tabBtnLogin = document.getElementById('tabBtnLogin');
+  const tabBtnRegister = document.getElementById('tabBtnRegister');
+  const emailLoginForm = document.getElementById('emailLoginForm');
+  const emailRegisterForm = document.getElementById('emailRegisterForm');
+  const googleSignInBtn = document.getElementById('googleSignInBtn');
+  const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+
+  // Tab Switching (Login vs Register)
+  if (tabBtnLogin && tabBtnRegister) {
+    tabBtnLogin.addEventListener('click', () => {
+      hideAlert();
+      tabBtnLogin.style.background = '#FFFFFF';
+      tabBtnLogin.style.color = '#1E2B58';
+      tabBtnLogin.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
+
+      tabBtnRegister.style.background = 'transparent';
+      tabBtnRegister.style.color = '#64748B';
+      tabBtnRegister.style.boxShadow = 'none';
+
+      if (emailLoginForm) emailLoginForm.style.display = 'block';
+      if (emailRegisterForm) emailRegisterForm.style.display = 'none';
+    });
+
+    tabBtnRegister.addEventListener('click', () => {
+      hideAlert();
+      tabBtnRegister.style.background = '#FFFFFF';
+      tabBtnRegister.style.color = '#1E2B58';
+      tabBtnRegister.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
+
+      tabBtnLogin.style.background = 'transparent';
+      tabBtnLogin.style.color = '#64748B';
+      tabBtnLogin.style.boxShadow = 'none';
+
+      if (emailLoginForm) emailLoginForm.style.display = 'none';
+      if (emailRegisterForm) emailRegisterForm.style.display = 'block';
+    });
+  }
+
+  // Password Visibility Toggles
+  document.querySelectorAll('.toggle-pass-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('data-target');
+      const input = document.getElementById(targetId);
+      if (!input) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+      } else {
+        input.type = 'password';
+        btn.innerHTML = '<i class="fa-solid fa-eye"></i>';
+      }
+    });
+  });
+
+  // 1. Google Sign-In
+  if (googleSignInBtn) {
+    googleSignInBtn.addEventListener('click', async () => {
+      hideAlert();
+      const originalText = googleSignInBtn.innerHTML;
+      googleSignInBtn.disabled = true;
+      googleSignInBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Google से कनेक्ट हो रहा है...';
+
+      try {
+        const userCredential = await signInWithPopup(auth, googleProvider);
+        const user = userCredential.user;
+
+        // Check/Create student document in Firestore
+        const studentRef = doc(db, "students", user.uid);
+        const studentSnap = await getDoc(studentRef);
+
+        if (!studentSnap.exists()) {
+          await setDoc(studentRef, {
+            uid: user.uid,
+            name: user.displayName || 'विद्यार्थी',
+            email: user.email,
+            phone: user.phoneNumber || '',
+            targetExam: 'RPSC वरिष्ठ अध्यापक (2nd Grade) हिंदी',
+            hasTestSeriesAccess: false,
+            hasEbooksAccess: false,
+            bookOrders: [],
+            createdAt: new Date().toISOString()
+          });
+        }
+        // onAuthStateChanged will seamlessly switch view to dashboard!
+      } catch (error) {
+        console.error('Google Sign-In Error:', error);
+        showAlert(getHindiErrorMessage(error.code), 'error');
+        googleSignInBtn.disabled = false;
+        googleSignInBtn.innerHTML = originalText;
+      }
+    });
+  }
+
+  // 2. Email Sign-In
+  if (emailLoginForm) {
+    emailLoginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAlert();
+
+      const emailInput = document.getElementById('loginEmail');
+      const passInput = document.getElementById('loginPassword');
+      const submitBtn = document.getElementById('emailLoginSubmitBtn');
+
+      if (!emailInput || !passInput) return;
+      const email = emailInput.value.trim();
+      const password = passInput.value;
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> लॉगिन हो रहा है...';
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        // onAuthStateChanged will seamlessly switch view to dashboard!
+      } catch (error) {
+        console.error('Email Sign-In Error:', error);
+        showAlert(getHindiErrorMessage(error.code), 'error');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>लॉगिन करें</span> <i class="fa-solid fa-arrow-right"></i>';
+      }
+    });
+  }
+
+  // 3. Email Registration
+  if (emailRegisterForm) {
+    emailRegisterForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAlert();
+
+      const nameInput = document.getElementById('regName');
+      const emailInput = document.getElementById('regEmail');
+      const phoneInput = document.getElementById('regPhone');
+      const passInput = document.getElementById('regPassword');
+      const submitBtn = document.getElementById('emailRegisterSubmitBtn');
+
+      if (!emailInput || !passInput) return;
+      const name = nameInput ? nameInput.value.trim() : 'विद्यार्थी';
+      const email = emailInput.value.trim();
+      const phone = phoneInput ? phoneInput.value.trim() : '';
+      const password = passInput.value;
+
+      if (password.length < 6) {
+        showAlert('पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।', 'error');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> खाता बनाया जा रहा है...';
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        if (name && user) {
+          await updateProfile(user, { displayName: name });
+        }
+
+        const studentRef = doc(db, "students", user.uid);
+        await setDoc(studentRef, {
+          uid: user.uid,
+          name: name,
+          email: email,
+          phone: phone,
+          hasTestSeriesAccess: false,
+          hasEbooksAccess: false,
+          bookOrders: [],
+          createdAt: new Date().toISOString()
+        });
+        // onAuthStateChanged will seamlessly switch view to dashboard!
+      } catch (error) {
+        console.error('Registration Error:', error);
+        showAlert(getHindiErrorMessage(error.code), 'error');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>खाता बनाएं एवं लॉगिन करें</span> <i class="fa-solid fa-user-plus"></i>';
+      }
+    });
+  }
+
+  // 4. Forgot Password
+  if (forgotPasswordBtn) {
+    forgotPasswordBtn.addEventListener('click', async () => {
+      const emailInput = document.getElementById('loginEmail');
+      let email = emailInput ? emailInput.value.trim() : '';
+
+      if (!email) {
+        email = prompt('कृपया अपना पंजीकृत ईमेल आईडी दर्ज करें (पासवर्ड रीसेट लिंक हेतु):');
+        if (!email) return;
+        email = email.trim();
+      }
+
+      try {
+        await sendPasswordResetEmail(auth, email);
+        showAlert('पासवर्ड रीसेट लिंक "' + email + '" पर भेज दिया गया है। कृपया अपना इनबॉक्स / स्पैम फोल्डर देखें।', 'success');
+      } catch (error) {
+        console.error('Reset Password Error:', error);
+        showAlert(getHindiErrorMessage(error.code), 'error');
+      }
+    });
+  }
+}
 
 // 1. Dashboard Tab Switching
 function initDashboardTabs() {
@@ -34,7 +303,7 @@ function initDashboardTabs() {
   });
 }
 
-// 2. Top Header Logout Button (Instant Logout, No Confirmation Popup)
+// 2. Top Header Logout Button (Instant Seamless Logout, Zero Redirect Loop)
 function initLogoutHandler() {
   const logoutBtn = document.getElementById('studentHeaderLogoutBtn');
   if (logoutBtn) {
@@ -50,12 +319,13 @@ function initLogoutHandler() {
         try {
           localStorage.removeItem('bhaskar_student_session');
         } catch (e) {}
-        window.location.href = 'student-login.html';
+        // onAuthStateChanged will smoothly switch view to login form!
       } catch (error) {
         console.error('Logout error:', error);
-        logoutBtn.disabled = false;
-        logoutBtn.innerHTML = '<i class="fa-solid fa-right-from-bracket mr-1"></i> लॉगआउट';
         alert('लॉगआउट में समस्या आई: ' + error.message);
+      } finally {
+        logoutBtn.disabled = false;
+        logoutBtn.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> लॉगआउट';
       }
     });
   }
@@ -114,10 +384,26 @@ function handlePendingBookOrderExecution(user) {
   if (orderHandled) return;
   
   let orderData = null;
+
+  // Check URL parameters first (?action=order&book=...&price=...)
   try {
-    const raw = sessionStorage.getItem('pending_book_order') || localStorage.getItem('pending_book_order');
-    if (raw) orderData = JSON.parse(raw);
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('action') === 'order' || urlParams.get('book')) {
+      orderData = {
+        book: urlParams.get('book') || 'मंदार पब्लिकेशन पुस्तक',
+        price: urlParams.get('price') || ''
+      };
+      // Clean URL without refresh
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   } catch (e) {}
+
+  if (!orderData) {
+    try {
+      const raw = sessionStorage.getItem('pending_book_order') || localStorage.getItem('pending_book_order');
+      if (raw) orderData = JSON.parse(raw);
+    } catch (e) {}
+  }
 
   if (!orderData) return;
   orderHandled = true;
@@ -194,8 +480,17 @@ let unsubscribeStudentDoc = null;
 
 function initDashboardAuthListener() {
   onAuthStateChanged(auth, async (user) => {
+    const loadingEl = document.getElementById('studentAuthLoading');
+    const loginView = document.getElementById('studentLoginView');
+    const dashboardView = document.getElementById('studentDashboardView');
+    const logoutBtn = document.getElementById('studentHeaderLogoutBtn');
+    const adminBanner = document.getElementById('adminModeBanner');
+
+    // Hide loader immediately once Firebase has resolved auth state
+    if (loadingEl) loadingEl.style.display = 'none';
+
     if (!user) {
-      // User is not logged in -> redirect to student-login.html!
+      // User is not logged in -> Show login view seamlessly
       if (unsubscribeStudentDoc) {
         unsubscribeStudentDoc();
         unsubscribeStudentDoc = null;
@@ -203,11 +498,15 @@ function initDashboardAuthListener() {
       try {
         localStorage.removeItem('bhaskar_student_session');
       } catch (e) {}
-      window.location.href = 'student-login.html';
+
+      if (logoutBtn) logoutBtn.style.display = 'none';
+      if (adminBanner) adminBanner.style.display = 'none';
+      if (dashboardView) dashboardView.style.display = 'none';
+      if (loginView) loginView.style.display = 'block';
       return;
     }
 
-    // User is logged in!
+    // User is logged in! -> Show dashboard view seamlessly
     try {
       localStorage.setItem('bhaskar_student_session', JSON.stringify({
         uid: user.uid,
@@ -217,15 +516,22 @@ function initDashboardAuthListener() {
       }));
     } catch (e) {}
 
-    // Check admin redirection
+    if (loginView) loginView.style.display = 'none';
+    if (dashboardView) dashboardView.style.display = 'block';
+    if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+
+    // Check if user is an authorized admin -> Show admin banner inside student view (NO auto-redirect)
     try {
       const adminDocRef = doc(db, "admins", user.uid);
       const adminDocSnap = await getDoc(adminDocRef);
-      if (adminDocSnap.exists()) {
-        window.location.href = 'admin.html';
-        return;
+      if (adminDocSnap.exists() && adminBanner) {
+        adminBanner.style.display = 'flex';
+      } else if (adminBanner) {
+        adminBanner.style.display = 'none';
       }
-    } catch (e) {}
+    } catch (e) {
+      if (adminBanner) adminBanner.style.display = 'none';
+    }
 
     // Execute pending order if any
     handlePendingBookOrderExecution(user);
