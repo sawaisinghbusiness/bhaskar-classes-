@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>हमारे बारे में | भास्कर क्लासेज बाड़मेर</title>
+  <meta name="description" content="भास्कर क्लासेज बाड़मेर (ESTD 2015) - RPSC 1st & 2nd Grade हिंदी संस्थान। हमारे शिक्षक R.R. Choudhary Sir एवं गणपत आर. चौधरी सर का परिचय, मिशन एवं विशेषताएं।">
+  <meta name="keywords" content="Bhaskar Classes Barmer, भास्कर क्लासेज बाड़मेर, R.R. Choudhary Sir, G.R. Choudhary, मंदार पब्लिकेशन, RPSC Hindi Faculty">
+  <meta name="author" content="भास्कर क्लासेज बाड़मेर">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://bhaskarclassesbarmer.com/about.html">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* ==========================================================================
+       ABOUT PAGE - MODERN COMPACT APP-GRADE DESIGN SYSTEM
+       ========================================================================== */
+
+    /* Compact Hero */
+    .about-hero {
+      background: linear-gradient(135deg, var(--color-primary) 0%, #0d1b3e 100%);
+      color: #ffffff;
+      padding: 2.5rem 0 2rem;
+      text-align: center;
+      position: relative;
+    }
+    .about-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 163, 232, 0.15);
+      color: var(--color-accent);
+      border: 1px solid rgba(0, 163, 232, 0.35);
+      padding: 4px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      margin-bottom: 0.65rem;
+    }
+    .about-hero h1 {
+      font-size: clamp(1.6rem, 3.5vw, 2.25rem);
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+    }
+    .about-hero p {
+      font-size: clamp(0.875rem, 2vw, 1rem);
+      color: #cbd5e1;
+      max-width: 640px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin: -1.5rem auto 2.5rem;
+      position: relative;
+      z-index: 2;
+    }
+    .stat-box {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: 1rem 0.75rem;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      transition: transform 0.2s ease;
+    }
+    .stat-box:hover {
+      transform: translateY(-2px);
+    }
+    .stat-box .num {
+      font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+      font-weight: 800;
+      color: var(--color-accent);
+      line-height: 1.1;
+      margin-bottom: 0.25rem;
+    }
+    .stat-box .lbl {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      line-height: 1.3;
+    }
+
+    /* About Institute Card */
+    .about-card {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 2rem;
+    }
+    .about-card h2 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--color-primary);
+      margin-bottom: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .about-card p {
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+      line-height: 1.75;
+      margin-bottom: 0.85rem;
+    }
+    .about-card p:last-child {
+      margin-bottom: 0;
+    }
+    .highlight-brand {
+      color: var(--color-accent);
+      font-weight: 700;
+    }
+
+    /* ==========================================================================
+       TEACHER / FACULTY CARDS (COMPACT & BEAUTIFULLY PROPORTIONED)
+       ========================================================================== */
+    .faculty-section {
+      background-color: var(--color-bg);
+      padding: 3rem 0;
+    }
+    .faculty-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .teacher-card {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .teacher-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--color-accent);
+    }
+    .teacher-top {
+      padding: 1.25rem 1.25rem 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+      background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+    }
+    .teacher-avatar-wrap {
+      width: 92px;
+      height: 104px;
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 2px solid #ffffff;
+      box-shadow: 0 4px 10px rgba(30, 43, 88, 0.12);
+      background: #e2e8f0;
+    }
+    .teacher-avatar-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+    .teacher-meta {
+      flex: 1;
+      min-width: 0;
+    }
+    .teacher-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .teacher-badge.founder {
+      background: #EFF6FF;
+      color: #1E2B58;
+      border: 1px solid #BFDBFE;
+    }
+    .teacher-badge.author {
+      background: #ECFDF5;
+      color: #047857;
+      border: 1px solid #A7F3D0;
+    }
+    .teacher-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--color-primary);
+      line-height: 1.25;
+      margin-bottom: 0.25rem;
+    }
+    .teacher-subject {
+      font-size: 0.8125rem;
+      color: var(--color-accent);
+      font-weight: 600;
+      line-height: 1.35;
+    }
+    .teacher-body {
+      padding: 1.15rem 1.25rem;
+      flex: 1;
+    }
+    .teacher-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.85rem;
+    }
+    .teacher-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      background: var(--color-primary-light);
+      border: 1px solid rgba(30, 43, 88, 0.08);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .teacher-tag i {
+      color: var(--color-accent);
+      font-size: 0.7rem;
+    }
+    .teacher-bio {
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+    .teacher-footer {
+      padding: 0.85rem 1.25rem 1.15rem;
+      border-top: 1px solid var(--color-border);
+      background: #FAFAFA;
+    }
+
+    /* Feature Grid (Why Choose Us) */
+    .features-4col {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .mini-feature-card {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: 1.25rem 1rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .mini-feature-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      margin: 0 auto 0.65rem;
+    }
+    .mini-feature-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 0.35rem;
+    }
+    .mini-feature-desc {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    /* Mission Vision Cards */
+    .mv-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .mv-box {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: 1.35rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .mv-box-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    .mv-box.mission .mv-box-icon {
+      background: #EFF6FF;
+      color: var(--color-accent);
+    }
+    .mv-box.vision .mv-box-icon {
+      background: #ECFDF5;
+      color: var(--color-success);
+    }
+    .mv-box h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 0.35rem;
+    }
+    .mv-box p {
+      font-size: 0.84rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* CTA Banner */
+    .about-cta {
+      background: linear-gradient(135deg, var(--color-primary) 0%, #0d1b3e 100%);
+      color: #ffffff;
+      padding: 2.25rem 1.5rem;
+      border-radius: var(--radius-card);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .about-cta h2 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.4rem;
+    }
+    .about-cta p {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      max-width: 540px;
+      margin: 0 auto 1.25rem;
+    }
+    .about-cta-btns {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ==========================================================================
+       MOBILE RESPONSIVENESS
+       ========================================================================== */
+    @media (max-width: 768px) {
+      .about-hero {
+        padding: 1.75rem 1rem 1.5rem;
+      }
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.65rem;
+        margin: -1rem 0 1.75rem;
+      }
+      .stat-box {
+        padding: 0.75rem 0.5rem;
+      }
+      .about-card {
+        padding: 1.25rem 1rem;
+      }
+      .faculty-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 1.15rem;
+      }
+      .teacher-top {
+        padding: 1rem;
+        gap: 1rem;
+      }
+      .teacher-avatar-wrap {
+        width: 78px;
+        height: 88px;
+      }
+      .teacher-name {
+        font-size: 1.05rem;
+      }
+      .teacher-body {
+        padding: 0.9rem 1rem;
+      }
+      .features-4col {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+      .mv-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+      }
+      .about-cta {
+        padding: 1.75rem 1rem;
+      }
+      .about-cta-btns .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== STICKY HEADER & NAVBAR ==================== -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand" aria-label="भास्कर क्लासेज बाड़मेर">
+        <img src="new logo for the web.png" alt="भास्कर क्लासेज बाड़मेर" class="brand-logo-img" onerror="this.onerror=null; this.src='bhaskar-logo.png';">
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="nav">
+        <a href="index.html" class="nav-link">होम</a>
+        <a href="classes.html" class="nav-link">क्लासेज व कोर्सेज</a>
+        <a href="books.html" class="nav-link">मंदार पुस्तकें</a>
+        <a href="toppers.html" class="nav-link">टॉपर्स</a>
+        <a href="about.html" class="nav-link active">About (हमारे बारे में)</a>
+        <a href="index.html#contact" class="nav-link">संपर्क</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="student.html" class="btn btn-sm btn-outline btn-desk">
+          <i class="fa-solid fa-user-graduate"></i> विद्यार्थी लॉगिन
+        </a>
+        <a href="admin.html" class="btn btn-sm btn-primary btn-desk">
+          <i class="fa-solid fa-lock"></i> एडमिन
+        </a>
+        <a href="https://sansa.page.link/oC8g" target="_blank" class="btn btn-sm btn-accent btn-desk">
+          <i class="fa-brands fa-google-play"></i> ऐप
+        </a>
+        <a href="tel:8949287751" class="header-call-btn" title="कॉल करें (8949287751)" aria-label="कॉल करें">
+          <i class="fa-solid fa-phone"></i>
+        </a>
+        <button id="mobileMenuBtn" class="menu-toggle" aria-label="नेविगेशन मेनू" aria-expanded="false">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobileMenu" class="mobile-menu">
+      <nav class="mobile-nav">
+        <a href="index.html" class="nav-link">होम</a>
+        <a href="classes.html" class="nav-link">क्लासेज व ऑनलाइन कोर्सेज</a>
+        <a href="books.html" class="nav-link special">मंदार पब्लिकेशन पुस्तकें (₹250)</a>
+        <a href="toppers.html" class="nav-link">टॉपर्स 2024-25</a>
+        <a href="about.html" class="nav-link active">हमारे बारे में (About Us)</a>
+        <a href="index.html#contact" class="nav-link">संपर्क व पता</a>
+      </nav>
+      <div class="mobile-actions">
+        <a href="student.html" class="btn btn-sm btn-outline btn-full">
+          <i class="fa-solid fa-user-graduate"></i> विद्यार्थी लॉगिन
+        </a>
+        <a href="admin.html" class="btn btn-sm btn-primary btn-full">
+          <i class="fa-solid fa-lock"></i> एडमिन पोर्टल
+        </a>
+        <a href="https://sansa.page.link/oC8g" target="_blank" class="btn btn-sm btn-accent btn-full">
+          <i class="fa-brands fa-google-play"></i> मोबाइल ऐप डाउनलोड
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== COMPACT HERO BANNER ==================== -->
+  <section class="about-hero">
+    <div class="container">
+      <h1>भास्कर क्लासेज बाड़मेर</h1>
+      <p>RPSC 1st & 2nd Grade शिक्षक भर्ती परीक्षाओं के लिए समर्पित एवं प्रामाणिक शिक्षण संस्थान।</p>
+    </div>
+  </section>
+
+  <!-- ==================== STATS ROW ==================== -->
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="num">10+ वर्ष</div>
+        <div class="lbl">समर्पित अनुभव</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">5000+</div>
+        <div class="lbl">कुल विद्यार्थी</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">500+</div>
+        <div class="lbl">शिक्षक चयन</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">2 पुस्तकें</div>
+        <div class="lbl">मंदार पब्लिकेशन</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== ABOUT INSTITUTE ==================== -->
+  <section class="section" style="padding-top: 0; padding-bottom: 2rem;">
+    <div class="container">
+      <div class="about-card">
+        <h2>
+          <i class="fa-solid fa-building-columns highlight-brand"></i> संस्थान परिचय — भास्कर क्लासेज बाड़मेर
+        </h2>
+        <p>
+          <strong>भास्कर क्लासेज बाड़मेर</strong> की स्थापना वर्ष <strong>2015</strong> में <strong>R.R. Choudhary Sir</strong> द्वारा की गई। संस्थान का प्राथमिक ध्येय पश्चिमी राजस्थान एवं सम्पूर्ण राज्य के अभ्यर्थियों को RPSC स्कूल व्याख्याता (1st Grade) एवं वरिष्ठ अध्यापक (2nd Grade) हिंदी विषय की गुणवत्तापूर्ण, अवधारणात्मक और परीक्षा-उन्मुख तैयारी उपलब्ध कराना है।
+        </p>
+        <p>
+          संस्थान ऑफलाइन कक्षा शिक्षण के साथ-साथ <strong>क्लासप्लस मोबाइल ऐप</strong> (Org Code: <code>bysvk</code>) और डिजिटल स्मार्ट बोर्ड के माध्यम से प्रदेश के कोने-कोने तक ऑनलाइन शिक्षा पहुंचा रहा है। इसके साथ ही, <strong>मंदार पब्लिकेशन</strong> के तत्वावधान में प्रामाणिक संदर्भ पुस्तकों का प्रकाशन भी निरंतर किया जा रहा है।
+        </p>
+      </div>
+
+      <!-- 4 Features Grid -->
+      <div class="features-4col">
+        <div class="mini-feature-card">
+          <div class="mini-feature-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+          <div class="mini-feature-title">स्मार्ट बोर्ड क्लासेज</div>
+          <p class="mini-feature-desc">आधुनिक डिजिटल स्मार्ट बोर्ड पर रिकॉर्डेड एवं लाइव वीडियो कक्षाएं।</p>
+        </div>
+        <div class="mini-feature-card">
+          <div class="mini-feature-icon"><i class="fa-solid fa-book-open"></i></div>
+          <div class="mini-feature-title">मंदार पुस्तकें</div>
+          <p class="mini-feature-desc">राजस्थान सामान्य ज्ञान व हिंदी साहित्य के 476 पृष्ठ संदर्भ ग्रंथ।</p>
+        </div>
+        <div class="mini-feature-card">
+          <div class="mini-feature-icon"><i class="fa-solid fa-file-signature"></i></div>
+          <div class="mini-feature-title">हस्तलिखित नोट्स</div>
+          <p class="mini-feature-desc">प्रत्येक टॉपिक के सरस एवं प्रामाणिक ई-नोट्स पीडीएफ प्रारूप में।</p>
+        </div>
+        <div class="mini-feature-card">
+          <div class="mini-feature-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="mini-feature-title">ऑल राजस्थान टेस्ट</div>
+          <p class="mini-feature-desc">टॉपिक-वाइज टेस्ट एवं राज्य स्तरीय रैंक विश्लेषण की सुविधा।</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FACULTY CARDS SECTION ==================== -->
+  <section class="faculty-section" id="faculty">
+    <div class="container">
+      <div class="section-header" style="margin-bottom: 2rem;">
+        <h2 class="section-title">हमारे संस्थापक एवं विषय विशेषज्ञ</h2>
+        <p class="section-desc">RPSC परीक्षाओं में निश्चित सफलता दिलाने वाले भास्कर क्लासेज के सम्मानित मार्गदर्शक।</p>
+      </div>
+
+      <div class="faculty-cards-grid">
+        
+        <!-- Teacher Card 1: R.R. Choudhary Sir -->
+        <div class="teacher-card">
+          <div>
+            <div class="teacher-top">
+              <div class="teacher-avatar-wrap">
+                <img src="R.R. Choudhary Sir.png" alt="R.R. Choudhary Sir" loading="lazy">
+              </div>
+              <div class="teacher-meta">
+                <h3 class="teacher-name">R.R. Choudhary Sir</h3>
+                <div class="teacher-subject">हिंदी साहित्य, काव्यशास्त्र एवं व्याकरण विशेषज्ञ</div>
+              </div>
+            </div>
+
+            <div class="teacher-body">
+              <div class="teacher-tags">
+                <span class="teacher-tag"><i class="fa-solid fa-briefcase"></i> 10+ वर्ष अध्यापन अनुभव</span>
+                <span class="teacher-tag"><i class="fa-solid fa-trophy"></i> 500+ शिक्षक चयन</span>
+                <span class="teacher-tag"><i class="fa-solid fa-graduation-cap"></i> RPSC 1st & 2nd Grade</span>
+              </div>
+              <p class="teacher-bio">
+                भास्कर क्लासेज बाड़मेर के संस्थापक एवं मुख्य शिक्षक। हिंदी साहित्य के इतिहास और व्याकरण को रटने के बजाय वैज्ञानिक तरीके से समझाने की विशिष्ट शैली। आपके सान्निध्य में राजस्थान के सैकड़ों विद्यार्थियों ने शिक्षक पद प्राप्त किया है।
+              </p>
+            </div>
+          </div>
+
+          <div class="teacher-footer">
+            <a href="classes.html" class="btn btn-sm btn-primary btn-full">
+              <i class="fa-solid fa-circle-play"></i> ऑनलाइन हिंदी कोर्सेज देखें &rarr;
+            </a>
+          </div>
+        </div>
+
+        <!-- Teacher Card 2: Ganpat R. Choudhary Sir -->
+        <div class="teacher-card">
+          <div>
+            <div class="teacher-top">
+              <div class="teacher-avatar-wrap">
+                <img src="gr_choudhary_sir.png" alt="गणपत आर. चौधरी सर" loading="lazy">
+              </div>
+              <div class="teacher-meta">
+                <h3 class="teacher-name">गणपत आर. चौधरी (G.R. Sir)</h3>
+                <div class="teacher-subject">राजस्थान राजनीतिक व प्रशासनिक व्यवस्था विशेषज्ञ</div>
+              </div>
+            </div>
+
+            <div class="teacher-body">
+              <div class="teacher-tags">
+                <span class="teacher-tag"><i class="fa-solid fa-school"></i> प्राचार्य, शिक्षा विभाग राज.</span>
+                <span class="teacher-tag"><i class="fa-solid fa-award"></i> NET / SET राजनीति विज्ञान</span>
+                <span class="teacher-tag"><i class="fa-solid fa-book"></i> लेखक, मंदार पब्लिकेशन</span>
+              </div>
+              <p class="teacher-bio">
+                शिक्षा विभाग राजस्थान में प्राचार्य एवं Ph.D शोधार्थी। मंदार पब्लिकेशन की 476 पृष्ठ एवं 24 अध्यायों वाली बेस्टसेलर पुस्तक 'राजस्थान राजनीतिक एवं प्रशासनिक व्यवस्था' के लेखक। राजस्थान सामान्य ज्ञान के प्रामाणिक संदर्भ व्याख्याता।
+              </p>
+            </div>
+          </div>
+
+          <div class="teacher-footer">
+            <a href="books.html" class="btn btn-sm btn-accent btn-full">
+              <i class="fa-solid fa-book-open"></i> मंदार पब्लिकेशन पुस्तकें देखें &rarr;
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MISSION & VISION ==================== -->
+  <section class="section" style="padding: 2.75rem 0 2rem;">
+    <div class="container">
+      <div class="mv-cards-grid">
+        <div class="mv-box mission">
+          <div class="mv-box-icon"><i class="fa-solid fa-bullseye"></i></div>
+          <div>
+            <h3>हमारा मिशन</h3>
+            <p>राजस्थान के प्रत्येक अभ्यर्थी तक कम से कम शुल्क में RPSC 1st & 2nd Grade हिंदी का संपूर्ण, प्रामाणिक व गुणवत्तापूर्ण पाठ्यक्रम पहुंचाना।</p>
+          </div>
+        </div>
+
+        <div class="mv-box vision">
+          <div class="mv-box-icon"><i class="fa-solid fa-eye"></i></div>
+          <div>
+            <h3>हमारा विजन</h3>
+            <p>आधुनिक डिजिटल तकनीक और शिक्षकों के व्यक्तिगत मार्गदर्शन से हिंदी साहित्य व व्याकरण की तैयारी में राजस्थान का अग्रणी व सबसे विश्वसनीय संस्थान बनना।</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA Banner -->
+      <div class="about-cta">
+        <h2>भास्कर क्लासेज से जुड़ें और शिक्षक बनने का सपना साकार करें</h2>
+        <p>ऑनलाइन बैच, लाइव कक्षाएं और मंदार पब्लिकेशन की पुस्तकें अब आपके मोबाइल पर उपलब्ध हैं।</p>
+        <div class="about-cta-btns">
+          <a href="classes.html" class="btn btn-accent" style="font-weight: 700;">
+            <i class="fa-solid fa-graduation-cap"></i> ऑनलाइन कोर्सेज
+          </a>
+          <a href="books.html" class="btn btn-outline-white" style="font-weight: 700;">
+            <i class="fa-solid fa-book"></i> पुस्तकें ऑर्डर करें
+          </a>
+          <a href="https://wa.me/918949287751?text=नमस्ते%20भास्कर%20क्लासेज,%20मुझे%20कोर्स%20और%20पुस्तकों%20की%20जानकारी%20चाहिए।" target="_blank" class="btn btn-success" style="font-weight: 700;">
+            <i class="fa-brands fa-whatsapp"></i> व्हाट्सएप हेल्पलाइन (8949287751)
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Col 1 -->
+        <div>
+          <a href="index.html" style="display: inline-block; background: #ffffff; padding: 6px 14px; border-radius: var(--radius-btn); margin-bottom: 1rem; box-shadow: var(--shadow-sm);" aria-label="भास्कर क्लासेज बाड़मेर">
+            <img src="new logo for the web.png" alt="भास्कर क्लासेज बाड़मेर" style="height: 44px; width: auto; display: block;" onerror="this.onerror=null; this.src='bhaskar-logo.png';">
+          </a>
+          <p class="footer-desc">
+            भास्कर क्लासेज बाड़मेर (ESTD 2015) — RPSC शिक्षक भर्ती परीक्षाओं का प्रतिष्ठित संस्थान। R.R. Choudhary Sir के कुशल मार्गदर्शन में संचालित।
+          </p>
+          <div class="topbar-social">
+            <a href="https://www.youtube.com/@BHASKARCLASSESBARMER2015" target="_blank" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            <a href="https://t.me/BCB2015" target="_blank" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+            <a href="https://instagram.com/bhaskarclasses2015" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://facebook.com/bhaskarclassesbmr" target="_blank" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+            <a href="https://wa.me/918949287751" target="_blank" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+
+        <!-- Col 2 -->
+        <div>
+          <h4 class="footer-col-title">ऑनलाइन कोर्सेज</h4>
+          <ul class="footer-links">
+            <li><a href="https://bysvk.courses.store/" target="_blank">RPSC 1st Grade व्याख्याता हिंदी (₹6,510)</a></li>
+            <li><a href="https://bysvk.courses.store/" target="_blank">RPSC 2nd Grade वरिष्ठ अध्यापक (₹6,510)</a></li>
+            <li><a href="https://bysvk.courses.store/" target="_blank">काव्य शास्त्र एवं विधाएँ विशेष बैच (₹1,509)</a></li>
+            <li><a href="https://bysvk.courses.store/" target="_blank">हिंदी टेस्ट सीरीज 2026 (₹109)</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3 -->
+        <div>
+          <h4 class="footer-col-title">मंदार पब्लिकेशन पुस्तकें</h4>
+          <ul class="footer-links">
+            <li><a href="books.html">हिन्दी साहित्य : वस्तुनिष्ठ इतिहास (₹200)</a></li>
+            <li><a href="books.html">राजस्थान राजनीतिक व्यवस्था (ऑफर ₹250)</a></li>
+            <li><a href="https://wa.me/918949287751?text=नमस्ते,%20मुझे%20कॉम्बो%20पुस्तकें%20(₹450)%20ऑर्डर%20करनी%20हैं।" target="_blank" data-book-order="true" data-book-name="दोनों पुस्तकें कॉम्बो पैक" data-book-price="450">दोनों पुस्तकें कॉम्बो पैक (₹450)</a></li>
+            <li><a href="https://wa.me/918949287751" target="_blank" data-book-order="true" data-book-name="मंदार पब्लिकेशन पुस्तकें" data-book-price="250">व्हाट्सएप पर पुस्तक ऑर्डर करें</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4 -->
+        <div>
+          <h4 class="footer-col-title">सेंटर व संपर्क</h4>
+          <div class="footer-contact-info">
+            <p><strong>भास्कर क्लासेज बाड़मेर</strong><br>विष्णु कॉलोनी, विश्नोई छात्रावास के सामने, बाड़मेर (राजस्थान) - 344001</p>
+            <p>हेल्पलाइन: <a href="tel:8949287751">8949287751</a></p>
+            <p><a href="about.html" style="color: var(--color-accent); font-weight: 700; display: inline-flex; align-items: center; gap: 6px;"><i class="fa-solid fa-circle-info"></i> हमारे बारे में (About Us) &rarr;</a></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom" style="justify-content: center; text-align: center;">
+        <div>
+          © 2015-2026 <strong>भास्कर क्लासेज बाड़मेर</strong> (Bhaskar Classes Barmer).
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp Button -->
+  <a href="https://wa.me/918949287751?text=नमस्ते%20भास्कर%20क्लासेज,%20मुझे%20हिंदी%20कोर्स%20और%20पुस्तकों%20की%20जानकारी%20चाहिए।" target="_blank" class="whatsapp-float" title="WhatsApp पर संपर्क करें (8949287751)" aria-label="WhatsApp Helpline">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <!-- ==================== STICKY BOTTOM NAVIGATION (≤1024px) ==================== -->
+  <nav id="bottomNav" class="bottom-nav" aria-label="Bottom Navigation">
+    <a href="index.html" class="bottom-nav-item" data-nav-section="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>होम</span>
+    </a>
+    <a href="classes.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line><polygon points="10 8 16 10 10 12 10 8" fill="currentColor" stroke="none"></polygon></svg>
+      <span>कोर्सेज</span>
+    </a>
+    <a href="books.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+      <span>पुस्तकें</span>
+    </a>
+    <a href="toppers.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1h10c.55 0 1-.45 1-1v-1c0-.55-.45-1-1-1h-2c-.55 0-1-.45-1-1v-2.34"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path></svg>
+      <span>टॉपर्स</span>
+    </a>
+    <a href="student.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      <span>लॉगिन</span>
+    </a>
+  </nav>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js"></script>
+</body>
+</html>
