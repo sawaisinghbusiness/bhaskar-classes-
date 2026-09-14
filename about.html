@@ -58,71 +58,122 @@
       line-height: 1.6;
     }
 
-    /* Stats Row */
-    .stats-row {
+    /* ==========================================================================
+       HIGH-TRUST EDITORIAL INSTITUTION PROFILE & STATS MATRIX
+       ========================================================================== */
+    .editorial-section {
+      padding: 3.5rem 0 2.5rem;
+      background-color: var(--color-bg);
+    }
+    .editorial-profile {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 4px 20px rgba(30, 43, 88, 0.04);
+      border-radius: 20px;
+      padding: 48px 40px;
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-      margin: -1.5rem auto 2.5rem;
-      position: relative;
-      z-index: 2;
-    }
-    .stat-box {
-      background: #ffffff;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-card);
-      padding: 1rem 0.75rem;
-      text-align: center;
-      box-shadow: var(--shadow-md);
-      transition: transform 0.2s ease;
-    }
-    .stat-box:hover {
-      transform: translateY(-2px);
-    }
-    .stat-box .num {
-      font-size: clamp(1.25rem, 2.5vw, 1.75rem);
-      font-weight: 800;
-      color: var(--color-accent);
-      line-height: 1.1;
-      margin-bottom: 0.25rem;
-    }
-    .stat-box .lbl {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--color-text-secondary);
-      line-height: 1.3;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 40px;
+      align-items: center;
     }
 
-    /* About Institute Card */
-    .about-card {
-      background: #ffffff;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-card);
-      padding: 2rem;
-      box-shadow: var(--shadow-sm);
-      margin-bottom: 2rem;
-    }
-    .about-card h2 {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: var(--color-primary);
-      margin-bottom: 0.85rem;
+    /* Left Column: Institution Story */
+    .editorial-story {
       display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .editorial-top-badge {
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
+      background: #F0F4F8;
+      color: #1E2B58;
+      font-weight: 700;
+      font-size: 0.8rem;
+      border: 1px solid #E2E8F0;
+      border-radius: 999px;
+      padding: 4px 14px;
+      margin-bottom: 16px;
+      letter-spacing: 0.02em;
     }
-    .about-card p {
-      font-size: 0.9375rem;
-      color: var(--color-text-secondary);
-      line-height: 1.75;
-      margin-bottom: 0.85rem;
+    .editorial-title {
+      color: #1E2B58;
+      font-size: 1.85rem;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 16px;
     }
-    .about-card p:last-child {
+    .editorial-copy {
+      color: #475569;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    .editorial-copy:last-of-type {
       margin-bottom: 0;
     }
-    .highlight-brand {
-      color: var(--color-accent);
-      font-weight: 700;
+    .trust-pills-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .trust-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      color: #334155;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .trust-pill i {
+      color: #00A3E8;
+      font-size: 0.9rem;
+    }
+
+    /* Right Column: 2x2 Stats Matrix */
+    .stats-matrix-card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .stats-matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .stat-matrix-box {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 18px 12px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(30, 43, 88, 0.03);
+    }
+    .stat-matrix-box .stat-num {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #1E2B58;
+      line-height: 1.15;
+      margin-bottom: 4px;
+    }
+    .stat-matrix-box .stat-num.highlight-cyan {
+      color: #00A3E8;
+    }
+    .stat-matrix-box .stat-lbl {
+      color: #64748B;
+      font-size: 0.8rem;
+      font-weight: 600;
+      line-height: 1.25;
     }
 
     /* ==========================================================================
@@ -257,45 +308,7 @@
       background: #FAFAFA;
     }
 
-    /* Feature Grid (Why Choose Us) */
-    .features-4col {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    .mini-feature-card {
-      background: #ffffff;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-card);
-      padding: 1.25rem 1rem;
-      text-align: center;
-      box-shadow: var(--shadow-sm);
-    }
-    .mini-feature-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: var(--color-primary-light);
-      color: var(--color-primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      margin: 0 auto 0.65rem;
-    }
-    .mini-feature-title {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--color-primary);
-      margin-bottom: 0.35rem;
-    }
-    .mini-feature-desc {
-      font-size: 0.78rem;
-      color: var(--color-text-muted);
-      line-height: 1.45;
-      margin: 0;
-    }
+
 
     /* Mission Vision Cards */
     .mv-cards-grid {
@@ -374,22 +387,19 @@
     }
 
     /* ==========================================================================
-       MOBILE RESPONSIVENESS
+       RESPONSIVENESS
        ========================================================================== */
+    @media (max-width: 840px) {
+      .editorial-profile {
+        grid-template-columns: 1fr;
+        padding: 28px 20px;
+        gap: 24px;
+      }
+    }
+
     @media (max-width: 768px) {
       .about-hero {
         padding: 1.75rem 1rem 1.5rem;
-      }
-      .stats-row {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.65rem;
-        margin: -1rem 0 1.75rem;
-      }
-      .stat-box {
-        padding: 0.75rem 0.5rem;
-      }
-      .about-card {
-        padding: 1.25rem 1rem;
       }
       .faculty-cards-grid {
         grid-template-columns: 1fr;
@@ -409,10 +419,6 @@
       .teacher-body {
         padding: 0.9rem 1rem;
       }
-      .features-4col {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
-      }
       .mv-cards-grid {
         grid-template-columns: 1fr;
         gap: 0.85rem;
@@ -422,6 +428,21 @@
       }
       .about-cta-btns .btn {
         width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .editorial-title {
+        font-size: 1.5rem;
+      }
+      .stat-matrix-box {
+        padding: 14px 8px;
+      }
+      .stat-matrix-box .stat-num {
+        font-size: 1.5rem;
+      }
+      .stat-matrix-box .stat-lbl {
+        font-size: 0.75rem;
       }
     }
   </style>
@@ -496,65 +517,52 @@
     </div>
   </section>
 
-  <!-- ==================== STATS ROW ==================== -->
-  <div class="container">
-    <div class="stats-row">
-      <div class="stat-box">
-        <div class="num">10+ वर्ष</div>
-        <div class="lbl">समर्पित अनुभव</div>
-      </div>
-      <div class="stat-box">
-        <div class="num">5000+</div>
-        <div class="lbl">कुल विद्यार्थी</div>
-      </div>
-      <div class="stat-box">
-        <div class="num">500+</div>
-        <div class="lbl">शिक्षक चयन</div>
-      </div>
-      <div class="stat-box">
-        <div class="num">2 पुस्तकें</div>
-        <div class="lbl">मंदार पब्लिकेशन</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== ABOUT INSTITUTE ==================== -->
-  <section class="section" style="padding-top: 0; padding-bottom: 2rem;">
+  <!-- ==================== HIGH-TRUST EDITORIAL INSTITUTION PROFILE ==================== -->
+  <section class="editorial-section">
     <div class="container">
-      <div class="about-card">
-        <h2>
-          <i class="fa-solid fa-building-columns highlight-brand"></i> संस्थान परिचय — भास्कर क्लासेज बाड़मेर
-        </h2>
-        <p>
-          <strong>भास्कर क्लासेज बाड़मेर</strong> की स्थापना वर्ष <strong>2015</strong> में <strong>R.R. Choudhary Sir</strong> द्वारा की गई। संस्थान का प्राथमिक ध्येय पश्चिमी राजस्थान एवं सम्पूर्ण राज्य के अभ्यर्थियों को RPSC स्कूल व्याख्याता (1st Grade) एवं वरिष्ठ अध्यापक (2nd Grade) हिंदी विषय की गुणवत्तापूर्ण, अवधारणात्मक और परीक्षा-उन्मुख तैयारी उपलब्ध कराना है।
-        </p>
-        <p>
-          संस्थान ऑफलाइन कक्षा शिक्षण के साथ-साथ <strong>क्लासप्लस मोबाइल ऐप</strong> (Org Code: <code>bysvk</code>) और डिजिटल स्मार्ट बोर्ड के माध्यम से प्रदेश के कोने-कोने तक ऑनलाइन शिक्षा पहुंचा रहा है। इसके साथ ही, <strong>मंदार पब्लिकेशन</strong> के तत्वावधान में प्रामाणिक संदर्भ पुस्तकों का प्रकाशन भी निरंतर किया जा रहा है।
-        </p>
-      </div>
+      <div class="editorial-profile">
+        
+        <!-- Left Column: Institution Story -->
+        <div class="editorial-story">
+          <span class="editorial-top-badge">स्थापना : 2015 • बाड़मेर (राजस्थान)</span>
+          <h2 class="editorial-title">संस्थान परिचय — भास्कर क्लासेज बाड़मेर</h2>
+          <p class="editorial-copy">
+            भास्कर क्लासेज बाड़मेर की स्थापना वर्ष 2015 में R.R. Choudhary Sir द्वारा की गई। संस्थान का प्राथमिक उद्देश्य पश्चिमी राजस्थान एवं सम्पूर्ण राज्य के अभ्यर्थियों को RPSC स्कूल व्याख्याता (1st Grade) एवं वरिष्ठ अध्यापक (2nd Grade) हिंदी विषय की गुणवत्तापूर्ण, अवधारणात्मक और परीक्षा-उन्मुख तैयारी उपलब्ध कराना है।
+          </p>
+          <p class="editorial-copy">
+            संस्थान बाड़मेर स्थित ऑफलाइन केंद्र के साथ-साथ क्लासप्लस पावर्ड मोबाइल ऐप और डिजिटल स्मार्ट बोर्ड के माध्यम से प्रदेश भर के अभ्यर्थियों को लाइव व रिकॉर्डेड कक्षाएं प्रदान करता है। इसके साथ ही मंदार पब्लिकेशन के तत्वावधान में प्रामाणिक संदर्भ पुस्तकों का प्रकाशन भी निरंतर किया जाता है।
+          </p>
+          
+          <!-- Trust Pills -->
+          <div class="trust-pills-row">
+            <span class="trust-pill"><i class="fa-solid fa-chalkboard-user"></i> स्मार्ट बोर्ड कक्षाएं</span>
+            <span class="trust-pill"><i class="fa-solid fa-mobile-screen"></i> ऐप कोड: bysvk</span>
+            <span class="trust-pill"><i class="fa-solid fa-book-open"></i> मंदार पब्लिकेशन</span>
+          </div>
+        </div>
 
-      <!-- 4 Features Grid -->
-      <div class="features-4col">
-        <div class="mini-feature-card">
-          <div class="mini-feature-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
-          <div class="mini-feature-title">स्मार्ट बोर्ड क्लासेज</div>
-          <p class="mini-feature-desc">आधुनिक डिजिटल स्मार्ट बोर्ड पर रिकॉर्डेड एवं लाइव वीडियो कक्षाएं।</p>
+        <!-- Right Column: 2x2 Stats Matrix -->
+        <div class="stats-matrix-card">
+          <div class="stats-matrix-grid">
+            <div class="stat-matrix-box">
+              <div class="stat-num">10+ वर्ष</div>
+              <div class="stat-lbl">समर्पित अनुभव</div>
+            </div>
+            <div class="stat-matrix-box">
+              <div class="stat-num">5000+</div>
+              <div class="stat-lbl">कुल विद्यार्थी</div>
+            </div>
+            <div class="stat-matrix-box">
+              <div class="stat-num highlight-cyan">500+</div>
+              <div class="stat-lbl">शिक्षक चयन</div>
+            </div>
+            <div class="stat-matrix-box">
+              <div class="stat-num">2 पुस्तकें</div>
+              <div class="stat-lbl">मंदार पब्लिकेशन</div>
+            </div>
+          </div>
         </div>
-        <div class="mini-feature-card">
-          <div class="mini-feature-icon"><i class="fa-solid fa-book-open"></i></div>
-          <div class="mini-feature-title">मंदार पुस्तकें</div>
-          <p class="mini-feature-desc">राजस्थान सामान्य ज्ञान व हिंदी साहित्य के 476 पृष्ठ संदर्भ ग्रंथ।</p>
-        </div>
-        <div class="mini-feature-card">
-          <div class="mini-feature-icon"><i class="fa-solid fa-file-signature"></i></div>
-          <div class="mini-feature-title">हस्तलिखित नोट्स</div>
-          <p class="mini-feature-desc">प्रत्येक टॉपिक के सरस एवं प्रामाणिक ई-नोट्स पीडीएफ प्रारूप में।</p>
-        </div>
-        <div class="mini-feature-card">
-          <div class="mini-feature-icon"><i class="fa-solid fa-chart-line"></i></div>
-          <div class="mini-feature-title">ऑल राजस्थान टेस्ट</div>
-          <p class="mini-feature-desc">टॉपिक-वाइज टेस्ट एवं राज्य स्तरीय रैंक विश्लेषण की सुविधा।</p>
-        </div>
+
       </div>
     </div>
   </section>
