@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSmoothScroll();
   initBottomNav();
   initBookOrderAuthGate();
+  initNavStudentSync();
 });
 
 /* --------------------------------------------------------------------------
@@ -939,7 +940,7 @@ function showBookAuthModal(bookName, bookPrice) {
         </div>
 
         <div class="book-auth-modal-actions">
-          <a id="bookAuthModalLoginBtn" href="student-login.html" class="btn btn-primary btn-full btn-lg" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <a id="bookAuthModalLoginBtn" href="student.html" class="btn btn-primary btn-full btn-lg" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
             <i class="fa-solid fa-right-to-bracket"></i> लॉगिन / नया रजिस्ट्रेशन करें
           </a>
           <button type="button" id="bookAuthModalCancelBtn" class="btn btn-outline btn-full btn-sm" style="color: #64748b; border-color: #cbd5e1;">
@@ -971,11 +972,44 @@ function showBookAuthModal(bookName, bookPrice) {
 
   const loginBtn = modalOverlay.querySelector('#bookAuthModalLoginBtn');
   if (loginBtn) {
-    loginBtn.href = 'student-login.html?action=order&book=' + encodeURIComponent(bookName) + '&price=' + encodeURIComponent(bookPrice);
+    loginBtn.href = 'student.html?action=order&book=' + encodeURIComponent(bookName) + '&price=' + encodeURIComponent(bookPrice);
   }
 
   // Show modal with animation
   requestAnimationFrame(() => {
     modalOverlay.classList.add('active');
   });
+}
+
+/**
+ * Dynamic Navbar Student State Sync across all pages
+ */
+function initNavStudentSync() {
+  function updateNavLabels() {
+    let session = null;
+    try {
+      const raw = localStorage.getItem('bhaskar_student_session');
+      if (raw) session = JSON.parse(raw);
+    } catch (e) {}
+
+    const isLoggedIn = !!(session && session.uid);
+    const navLinks = document.querySelectorAll('a[href="student.html"], a[href="student-login.html"]');
+
+    navLinks.forEach(link => {
+      if (link.classList.contains('bottom-nav-item')) return;
+      const icon = link.querySelector('.fa-user-graduate');
+      if (icon) {
+        if (isLoggedIn) {
+          const name = (session.name && session.name !== 'विद्यार्थी') ? session.name.split(' ')[0] : 'डैशबोर्ड';
+          link.innerHTML = `<i class="fa-solid fa-user-graduate"></i> विद्यार्थी पोर्टल (${name})`;
+        } else {
+          link.innerHTML = `<i class="fa-solid fa-user-graduate"></i> विद्यार्थी लॉगिन`;
+        }
+      }
+    });
+  }
+
+  updateNavLabels();
+  window.addEventListener('storage', updateNavLabels);
+  window.addEventListener('firebase-ready', updateNavLabels);
 }
