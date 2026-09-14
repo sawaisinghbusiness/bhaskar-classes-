@@ -499,7 +499,7 @@ function renderStudentDashboard(user, data) {
     phoneEl.innerHTML = `<i class="fa-solid fa-envelope mr-1"></i> ${email} ${phone ? '• <i class="fa-solid fa-phone ml-1"></i> ' + phone : ''}`;
   }
   if (idEl) {
-    idEl.innerHTML = `UID: <strong>${uid.substring(0, 8).toUpperCase()}</strong>`;
+    idEl.innerHTML = '';
   }
 
   if (initialEl) {
