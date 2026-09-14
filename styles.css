@@ -1960,6 +1960,23 @@ ul, ol {
   font-size: 1.25rem;
 }
 
+.feature-icon svg,
+.pillar-icon svg,
+.contact-card-icon svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  display: block;
+  stroke: currentColor;
+}
+
+.bottom-nav-item svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: block;
+  stroke: currentColor;
+  margin-bottom: 2px;
+}
+
 .feature-title {
   font-size: 1rem;
   font-weight: 700;
