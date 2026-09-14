@@ -183,7 +183,6 @@ function initAuthUI() {
   const googleSignInBtn = document.getElementById('googleSignInBtn');
   const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
   const logoutBtn = document.getElementById('studentLogoutBtn');
-  const topNavLogoutBtn = document.getElementById('topNavLogoutBtn');
   const profileForm = document.getElementById('studentProfileForm');
 
   // Tab Switching (Login vs Register)
@@ -403,7 +402,8 @@ function initAuthUI() {
   }
 
   // 5. Logout
-  const handleLogout = async () => {
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
       if (confirm('क्या आप निश्चित रूप से विद्यार्थी पोर्टल से लॉगआउट करना चाहते हैं?')) {
         try {
           if (unsubscribeStudentDoc) {
@@ -416,9 +416,7 @@ function initAuthUI() {
           console.error('Logout error:', error);
         }
       }
-    };
-    if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
-    if (topNavLogoutBtn) topNavLogoutBtn.addEventListener('click', handleLogout);;
+    });
   }
 
   // 6. Profile Form Update (Saves directly to Firestore)
@@ -600,7 +598,6 @@ function renderStudentDashboard(user, data) {
   if (initialEl) {
     initialEl.innerHTML = '';
     initialEl.innerText = displayName.charAt(0).toUpperCase();
-  }
   }
 
   // Profile form inputs
