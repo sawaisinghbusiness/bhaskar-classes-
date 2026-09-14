@@ -24,37 +24,6 @@ const MIME_TYPES = {
 
 const server = http.createServer((req, res) => {
   let reqPath = decodeURI(req.url.split('?')[0]);
-
-  if (reqPath === '/api/git-push') {
-    const { execSync } = require('child_process');
-    const gitBin = '"C:\\Program Files\\Git\\bin\\git.exe"';
-    const repoUrl = 'https://github.com/sawaisinghbusiness/bhaskar-classes-.git';
-    const log = [];
-    try {
-      log.push(execSync(`${gitBin} config user.name "Bhaskar Classes"`, { cwd: PUBLIC_DIR, encoding: 'utf8' }));
-      log.push(execSync(`${gitBin} config user.email "admin@bhaskarclasses2015.com"`, { cwd: PUBLIC_DIR, encoding: 'utf8' }));
-      log.push(execSync(`${gitBin} add .`, { cwd: PUBLIC_DIR, encoding: 'utf8' }));
-      try {
-        log.push(execSync(`${gitBin} commit -m "feat: student redirect fix, Firestore inquiry sync, and admin book/ebook modal"`, { cwd: PUBLIC_DIR, encoding: 'utf8' }));
-      } catch(e) {
-        log.push('Commit: ' + (e.stdout || e.message));
-      }
-      log.push(execSync(`${gitBin} push -u origin main --force`, { cwd: PUBLIC_DIR, encoding: 'utf8' }));
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true, log }));
-    } catch(err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ 
-        success: false, 
-        error: err.message, 
-        stderr: err.stderr ? err.stderr.toString() : '', 
-        stdout: err.stdout ? err.stdout.toString() : '', 
-        log 
-      }));
-    }
-    return;
-  }
-
   if (reqPath === '/' || reqPath === '') {
     reqPath = '/index.html';
   }
