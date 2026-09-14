@@ -14,25 +14,43 @@
 
   <link rel="stylesheet" href="styles.css">
   <style>
+    html, body {
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+      width: 100% !important;
+      position: relative;
+    }
     .portal-page {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       background-color: var(--color-bg-alt);
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+      width: 100%;
     }
     .portal-nav {
       background-color: #ffffff;
       border-bottom: 1px solid var(--color-border);
-      padding: 1rem 0;
+      padding: 0.85rem 0;
+      width: 100%;
+      max-width: 100vw;
+      box-sizing: border-box;
     }
     .portal-nav-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      width: 100%;
+      box-sizing: border-box;
     }
     .portal-main {
       flex: 1;
-      padding: 2.5rem 0;
+      padding: 2rem 0;
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden !important;
+      box-sizing: border-box;
     }
     .portal-card {
       background-color: #ffffff;
@@ -40,11 +58,73 @@
       border-radius: var(--radius-card);
       box-shadow: var(--shadow-sm);
       overflow: hidden;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
     }
     .portal-login-box {
       max-width: 440px;
-      margin: 2rem auto;
-      padding: 2.5rem 2rem;
+      margin: 1.5rem auto;
+      padding: 2.25rem 1.75rem;
+      box-sizing: border-box;
+    }
+    .student-header-banner {
+      background-color: var(--color-primary);
+      color: #ffffff;
+      padding: 1.75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      box-sizing: border-box;
+    }
+    .student-tabs-wrapper {
+      padding: 1.5rem 2rem 0;
+      box-sizing: border-box;
+    }
+    .student-body-wrapper {
+      padding: 1.5rem 2rem 2.5rem;
+      box-sizing: border-box;
+    }
+    @media (max-width: 768px) {
+      .portal-main {
+        padding: 1rem 0 2rem;
+      }
+      .portal-login-box {
+        margin: 0.75rem auto;
+        padding: 1.5rem 1rem;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+      }
+      .student-header-banner {
+        padding: 1.25rem 1rem;
+        gap: 1rem;
+      }
+      .student-tabs-wrapper {
+        padding: 1rem 1rem 0;
+      }
+      .student-body-wrapper {
+        padding: 1rem 1rem 1.5rem;
+      }
+      .tab-nav {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 4px;
+        width: 100%;
+      }
+      .form-row {
+        flex-direction: column !important;
+        gap: 0 !important;
+      }
+      .form-group {
+        width: 100% !important;
+      }
+      .form-control {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
     }
   </style>
 </head>
@@ -188,20 +268,20 @@
         <div class="portal-card">
           
           <!-- Student Header Banner -->
-          <div style="background-color: var(--color-primary); color: #ffffff; padding: 1.75rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.25rem;">
+          <div class="student-header-banner">
             <div style="display: flex; align-items: center; gap: 1.25rem;">
-              <div id="studentAvatarInitial" style="width: 3.75rem; height: 3.75rem; border-radius: 50%; background-color: var(--color-accent); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; font-weight: 800; overflow: hidden;">
+              <div id="studentAvatarInitial" style="width: 3.75rem; height: 3.75rem; border-radius: 50%; background-color: var(--color-accent); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; font-weight: 800; overflow: hidden; flex-shrink: 0;">
                 क
               </div>
               <div>
-                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
                   <h2 id="studentWelcomeName" style="font-size: 1.375rem; font-weight: 800; color: #ffffff;">विद्यार्थी</h2>
                   <span style="background-color: var(--color-success); color: #ffffff; font-size: 0.6875rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: var(--radius-pill);">सत्यापित छात्र (Verified)</span>
                 </div>
                 <div id="studentGoalDisplay" style="font-size: 0.875rem; color: #fdba74; font-weight: 600; margin-top: 0.25rem;">
                   🎯 लक्ष्य: RPSC 2nd Grade हिंदी
                 </div>
-                <div style="font-size: 0.8125rem; color: #cbd5e1; margin-top: 0.35rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div style="font-size: 0.8125rem; color: #cbd5e1; margin-top: 0.35rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
                   <span id="studentDisplayPhone"><i class="fa-solid fa-envelope mr-1"></i> --</span>
                   <span>•</span>
                   <span id="studentDisplayId">UID: <strong>--</strong></span>
@@ -217,7 +297,7 @@
           </div>
 
           <!-- Dashboard Tabs Navigation -->
-          <div style="padding: 1.5rem 2rem 0;">
+          <div class="student-tabs-wrapper">
             <div class="tab-nav">
               <button class="tab-btn active" data-student-tab="tabBooks"><i class="fa-solid fa-truck"></i> मेरी पुस्तकें (Delivery Tracking)</button>
               <button class="tab-btn" data-student-tab="tabNotes"><i class="fa-solid fa-file-pdf"></i> ई-नोट्स व पुस्तकें</button>
@@ -226,7 +306,7 @@
           </div>
 
           <!-- Tab Contents Body -->
-          <div style="padding: 1.5rem 2rem 2.5rem;">
+          <div class="student-body-wrapper">
 
             <!-- Tab 1: Books & Delivery -->
             <div id="tabBooks" class="tab-panel active">
@@ -362,11 +442,35 @@
   </main>
 
   <!-- Footer -->
-  <footer style="background-color: #0f1e33; color: #94a3b8; padding: 1.5rem 0; font-size: 0.8125rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.1);">
+  <footer style="background-color: #0f1e33; color: #94a3b8; padding: 1.5rem 0 5.5rem; font-size: 0.8125rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.1);">
     <div class="container">
       © 2015-2026 <strong>भास्कर क्लासेज बाड़मेर</strong> | हेल्पलाइन: 8949287751
     </div>
   </footer>
+
+  <!-- ==================== STICKY BOTTOM NAVIGATION (≤1024px) ==================== -->
+  <nav id="bottomNav" class="bottom-nav" aria-label="Bottom Navigation">
+    <a href="index.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>होम</span>
+    </a>
+    <a href="classes.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line><polygon points="10 8 16 10 10 12 10 8" fill="currentColor" stroke="none"></polygon></svg>
+      <span>कोर्सेज</span>
+    </a>
+    <a href="books.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+      <span>पुस्तकें</span>
+    </a>
+    <a href="toppers.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1h10c.55 0 1-.45 1-1v-1c0-.55-.45-1-1-1h-2c-.55 0-1-.45-1-1v-2.34"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path></svg>
+      <span>टॉपर्स</span>
+    </a>
+    <a href="student-login.html" class="bottom-nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      <span>लॉगिन</span>
+    </a>
+  </nav>
 
   <!-- Firebase App & Authentication Modules -->
   <script type="module" src="firebase-config.js"></script>
