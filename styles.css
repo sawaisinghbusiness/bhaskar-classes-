@@ -1106,18 +1106,24 @@ body:not(.portal-page):not(.admin-page) {
   background-color: var(--color-accent-hover);
 }
 
-/* Test Series Promo Banner - High-Converting Student Deal Voucher */
+/* Test Series Promo Banner - Clean Institutional Card */
 .test-series-banner {
-  background: #1E2B58;
-  border-top: 2px solid #00A3E8;
-  border-radius: 16px;
-  padding: 32px 36px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-top: 4px solid #1E2B58;
+  border-radius: 14px;
+  padding: 28px 34px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 32px;
-  box-shadow: 0 12px 30px -5px rgba(30, 43, 88, 0.25);
+  box-shadow: 0 10px 25px -5px rgba(30, 43, 88, 0.07), 0 4px 6px -4px rgba(30, 43, 88, 0.03);
   margin-top: 40px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.test-series-banner:hover {
+  box-shadow: 0 14px 32px -5px rgba(30, 43, 88, 0.12), 0 6px 12px -4px rgba(30, 43, 88, 0.06);
 }
 
 .banner-left {
@@ -1125,12 +1131,12 @@ body:not(.portal-page):not(.admin-page) {
 }
 
 .banner-title {
-  color: #FFFFFF;
-  font-size: 1.4rem;
+  color: #1E2B58;
+  font-size: 1.35rem;
   font-weight: 800;
   margin: 0 0 14px 0;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 10px;
+  border-bottom: 1px solid #F1F5F9;
 }
 
 .banner-features {
@@ -1143,16 +1149,18 @@ body:not(.portal-page):not(.admin-page) {
 }
 
 .banner-features li {
-  color: #E2E8F0;
-  font-size: 0.92rem;
+  color: #475569;
+  font-size: 0.95rem;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .banner-features .dot {
-  color: #00A3E8;
-  font-weight: 700;
+  color: #059669;
+  font-weight: 800;
+  font-size: 1rem;
 }
 
 .banner-right {
@@ -1173,66 +1181,68 @@ body:not(.portal-page):not(.admin-page) {
 .price-label {
   display: block;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   font-size: 0.75rem;
-  color: #94A3B8;
-  font-weight: 600;
+  color: #64748B;
+  font-weight: 700;
   margin-bottom: 2px;
 }
 
 .price-val {
   font-size: 2.25rem;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #1E2B58;
   line-height: 1.1;
   margin: 2px 0;
 }
 
 .price-mrp {
   font-size: 0.85rem;
-  color: #64748B;
+  color: #94A3B8;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  gap: 6px;
 }
 
 .price-mrp del {
-  color: #64748B;
-  font-size: 0.85rem;
+  color: #94A3B8;
+  font-size: 0.88rem;
 }
 
 .price-mrp span {
-  background: #FEF3C7;
-  color: #B45309;
-  font-weight: 800;
-  font-size: 0.75rem;
+  background: #ECFDF5;
+  color: #047857;
+  border: 1px solid #A7F3D0;
+  font-weight: 700;
+  font-size: 0.78rem;
   padding: 2px 8px;
   border-radius: 4px;
-  margin-left: 6px;
   display: inline-block;
   text-decoration: none;
 }
 
 .banner-cta {
-  background-color: #00A3E8;
+  background-color: #1E2B58;
   color: #FFFFFF;
   font-weight: 700;
-  padding: 14px 26px;
+  font-size: 0.95rem;
+  padding: 13px 26px;
   border-radius: 8px;
   text-decoration: none;
   white-space: nowrap;
-  box-shadow: 0 4px 14px rgba(0, 163, 232, 0.4);
-  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(30, 43, 88, 0.18);
+  transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .banner-cta:hover {
-  background-color: #0284C7;
+  background-color: #00A3E8;
   color: #FFFFFF;
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 163, 232, 0.5);
+  box-shadow: 0 6px 18px rgba(0, 163, 232, 0.35);
 }
 
 @media (max-width: 768px) {
@@ -1241,6 +1251,9 @@ body:not(.portal-page):not(.admin-page) {
     text-align: center;
     padding: 24px 18px;
     gap: 20px;
+  }
+  .banner-left {
+    width: 100%;
   }
   .banner-features {
     grid-template-columns: 1fr;
