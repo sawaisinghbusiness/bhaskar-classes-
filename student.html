@@ -187,12 +187,6 @@
 
             <!-- Tab 1: Books & Delivery -->
             <div id="tabBooks" class="tab-panel active">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
-                <div>
-                  <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--color-primary); margin-bottom: 0.2rem;">मंदार पब्लिकेशन बाड़मेर - आपकी पुस्तकें व स्पीड पोस्ट डिलीवरी ट्रैकिंग</h4>
-                </div>
-              </div>
-
               <!-- Books Dynamic Container -->
               <div id="studentBooksContainer" style="display: flex; flex-direction: column; gap: 1rem;">
                 <!-- Dynamically loaded from Firestore -->
@@ -207,14 +201,8 @@
 
             <!-- Tab 2: E-Notes & E-Books (Admin Permission Driven) -->
             <div id="tabNotes" class="tab-panel">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
-                <div>
-                  <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--color-primary); margin-bottom: 0.2rem;">अध्यायवार प्रामाणिक हस्तलिखित ई-नोट्स व ई-बुक्स</h4>
-                  <p style="font-size: 0.8125rem; color: var(--color-text-muted);">R.R. Choudhary Sir द्वारा तैयार विशिष्ट डिजिटल अध्ययन सामग्री</p>
-                </div>
-                <div id="ebooksAccessBadge">
-                  <!-- Loaded dynamically -->
-                </div>
+              <div id="ebooksAccessBadge" style="margin-bottom: 0.75rem;">
+                <!-- Loaded dynamically -->
               </div>
 
               <!-- Clean Neutral Notice (shown if no ebooks available yet) -->

@@ -282,9 +282,6 @@ function renderStudentDashboard(user, data) {
         <div style="background-color: var(--color-bg-alt); border: 1px dashed var(--color-border); border-radius: var(--radius-card); padding: 2rem; text-align: center;">
           <i class="fa-solid fa-box-open" style="font-size: 2.5rem; color: #94A3B8; margin-bottom: 0.75rem;"></i>
           <h4 style="font-size: 1rem; font-weight: 700; color: var(--color-primary);">वर्तमान में कोई पुस्तक ऑर्डर दर्ज नहीं है</h4>
-          <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.25rem;">
-            जब आप मंदार पब्लिकेशन की पुस्तकें ऑर्डर करेंगे, एडमिन यहाँ आपकी स्पीड पोस्ट ट्रैकिंग विवरण जोड़ देंगे।
-          </p>
           <a href="books.html" class="btn btn-primary btn-sm" style="margin-top: 1rem;">
             <i class="fa-solid fa-book"></i> पुस्तकें देखें
           </a>
