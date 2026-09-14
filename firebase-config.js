@@ -76,7 +76,12 @@ window.FirebaseAuth = {
   resetPassword: (email) => sendPasswordResetEmail(auth, email),
   
   // Sign Out
-  logout: () => signOut(auth),
+  logout: async () => {
+    try {
+      localStorage.removeItem('bhaskar_student_session');
+    } catch (e) {}
+    return signOut(auth);
+  },
 
   // Add Firestore Inquiry / Document Helper
   addDoc: (colRef, data) => addDoc(colRef, data),
@@ -84,6 +89,24 @@ window.FirebaseAuth = {
   // Current User getter
   getCurrentUser: () => auth.currentUser
 };
+
+// Keep localStorage student session in sync with auth state
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    try {
+      localStorage.setItem('bhaskar_student_session', JSON.stringify({
+        uid: user.uid,
+        email: user.email || '',
+        name: user.displayName || (user.email ? user.email.split('@')[0] : 'विद्यार्थी'),
+        phone: user.phoneNumber || ''
+      }));
+    } catch (e) {}
+  } else {
+    try {
+      localStorage.removeItem('bhaskar_student_session');
+    } catch (e) {}
+  }
+});
 
 // Notify other scripts that Firebase is ready
 window.dispatchEvent(new CustomEvent('firebase-ready', { detail: { auth, db } }));

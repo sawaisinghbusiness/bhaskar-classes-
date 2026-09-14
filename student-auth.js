@@ -21,9 +21,99 @@ import {
 } from "./firebase-config.js";
 
 document.addEventListener('DOMContentLoaded', () => {
+  checkPendingOrderPrompt();
   initAuthUI();
   initFirebaseListener();
 });
+
+// Check if user arrived via a book order button click
+function checkPendingOrderPrompt() {
+  const params = new URLSearchParams(window.location.search);
+  const action = params.get('action');
+  const bookParam = params.get('book');
+  const priceParam = params.get('price');
+  
+  let orderData = null;
+  try {
+    const raw = sessionStorage.getItem('pending_book_order') || localStorage.getItem('pending_book_order');
+    if (raw) orderData = JSON.parse(raw);
+  } catch (e) {}
+
+  if (action === 'order' || orderData) {
+    const bookName = (orderData && orderData.book) || bookParam || 'मंदार पब्लिकेशन पुस्तक';
+    const bookPrice = (orderData && orderData.price) || priceParam || '';
+    
+    const banner = document.getElementById('orderPromptBanner');
+    const bookNameEl = document.getElementById('orderPromptBookName');
+    if (banner) banner.style.display = 'block';
+    if (bookNameEl) {
+      bookNameEl.innerHTML = `चयनित पुस्तक: <strong>${bookName}</strong> ${bookPrice ? `(₹${bookPrice})` : ''}`;
+    }
+  }
+}
+
+// Global flag to prevent multiple order executions on reactive snapshots
+let orderHandled = false;
+function handlePendingBookOrderExecution(user) {
+  if (orderHandled) return;
+  
+  let orderData = null;
+  try {
+    const raw = sessionStorage.getItem('pending_book_order') || localStorage.getItem('pending_book_order');
+    if (raw) orderData = JSON.parse(raw);
+  } catch (e) {}
+
+  if (!orderData) return;
+  orderHandled = true;
+
+  // Clear storage
+  try {
+    sessionStorage.removeItem('pending_book_order');
+    localStorage.removeItem('pending_book_order');
+  } catch (e) {}
+
+  const studentName = user.displayName || (user.email ? user.email.split('@')[0] : 'विद्यार्थी');
+  const studentEmail = user.email || '';
+  const studentPhone = user.phoneNumber || '';
+  const bookName = orderData.book || 'मंदार पब्लिकेशन पुस्तक';
+  const bookPrice = orderData.price ? `₹${orderData.price}` : '';
+
+  const waText = encodeURIComponent(
+    `नमस्ते भास्कर क्लासेज,\n` +
+    `मैं पंजीकृत विद्यार्थी हूँ: ${studentName}\n` +
+    (studentPhone ? `मोबाइल: ${studentPhone}\n` : '') +
+    `ईमेल: ${studentEmail}\n` +
+    `पुस्तक: ${bookName} ${bookPrice ? `(${bookPrice})` : ''}\n` +
+    `कृपया मेरा पुस्तक ऑर्डर स्वीकार करें एवं डिलीवरी प्रक्रिया बताएं।`
+  );
+  const waUrl = `https://wa.me/918949287751?text=${waText}`;
+
+  // 1. Display prominent action banner at top of student dashboard
+  const bannerContainer = document.getElementById('orderSuccessBannerContainer');
+  if (bannerContainer) {
+    bannerContainer.style.display = 'block';
+    bannerContainer.innerHTML = `
+      <div style="background: linear-gradient(135deg, #15803d 0%, #166534 100%); color: #ffffff; border-radius: 12px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 15px rgba(21,128,61,0.25); text-align: center; margin-bottom: 1rem;">
+        <div style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0.35rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <i class="fa-solid fa-circle-check" style="color: #4ade80;"></i> खाता प्रमाणित! आपका पुस्तक ऑर्डर तैयार है
+        </div>
+        <p style="font-size: 0.875rem; color: #dcfce7; margin-bottom: 1rem; line-height: 1.4;">
+          <strong>${bookName} ${bookPrice ? `(${bookPrice})` : ''}</strong> का ऑर्डर अपने विद्यार्थी विवरण के साथ व्हाट्सएप पर भेजने हेतु नीचे क्लिक करें:
+        </p>
+        <a href="${waUrl}" target="_blank" class="btn" style="background-color: #25D366; color: #ffffff; font-weight: 800; font-size: 1rem; padding: 10px 24px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); text-decoration: none;">
+          <i class="fa-brands fa-whatsapp" style="font-size: 1.35rem;"></i> व्हाट्सएप पर ऑर्डर भेजें (8949287751) &rarr;
+        </a>
+      </div>
+    `;
+  }
+
+  // 2. Automatically try opening WhatsApp in a new tab
+  try {
+    window.open(waUrl, '_blank');
+  } catch (err) {
+    console.warn('Auto window.open notice:', err);
+  }
+}
 
 function showAlert(message, type = 'error') {
   const alertBox = document.getElementById('authAlertBox');
@@ -93,6 +183,7 @@ function initAuthUI() {
   const googleSignInBtn = document.getElementById('googleSignInBtn');
   const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
   const logoutBtn = document.getElementById('studentLogoutBtn');
+  const topNavLogoutBtn = document.getElementById('topNavLogoutBtn');
   const profileForm = document.getElementById('studentProfileForm');
 
   // Tab Switching (Login vs Register)
@@ -312,8 +403,7 @@ function initAuthUI() {
   }
 
   // 5. Logout
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', async () => {
+  const handleLogout = async () => {
       if (confirm('क्या आप निश्चित रूप से विद्यार्थी पोर्टल से लॉगआउट करना चाहते हैं?')) {
         try {
           if (unsubscribeStudentDoc) {
@@ -326,7 +416,9 @@ function initAuthUI() {
           console.error('Logout error:', error);
         }
       }
-    });
+    };
+    if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+    if (topNavLogoutBtn) topNavLogoutBtn.addEventListener('click', handleLogout);;
   }
 
   // 6. Profile Form Update (Saves directly to Firestore)
@@ -417,6 +509,9 @@ function initFirebaseListener() {
       if (loginView) loginView.style.display = 'none';
       if (dashboardView) dashboardView.style.display = 'block';
 
+      // Check and execute pending book order if student was redirected from order button
+      handlePendingBookOrderExecution(user);
+
       // Initial fast render using user auth profile
       renderStudentDashboard(user, {
         name: user.displayName || user.email.split('@')[0],
@@ -503,11 +598,9 @@ function renderStudentDashboard(user, data) {
   }
 
   if (initialEl) {
-    if (photoURL) {
-      initialEl.innerHTML = `<img src="${photoURL}" alt="${displayName}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
-    } else {
-      initialEl.innerText = displayName.charAt(0).toUpperCase();
-    }
+    initialEl.innerHTML = '';
+    initialEl.innerText = displayName.charAt(0).toUpperCase();
+  }
   }
 
   // Profile form inputs

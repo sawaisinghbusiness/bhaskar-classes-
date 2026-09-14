@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initPhotoManager();
   initSmoothScroll();
   initBottomNav();
+  initBookOrderAuthGate();
 });
 
 /* --------------------------------------------------------------------------
@@ -805,4 +806,107 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.innerText = text;
   return div.innerHTML;
+}
+
+/* --------------------------------------------------------------------------
+   7. BOOK ORDER AUTHENTICATION INTERCEPTOR
+   Mandates student login/signup before ordering books via WhatsApp
+   -------------------------------------------------------------------------- */
+function initBookOrderAuthGate() {
+  document.addEventListener('click', function(e) {
+    const orderLink = e.target.closest('[data-book-order], a[href*="wa.me"]');
+    if (!orderLink) return;
+
+    // Check if it's the general helpline floating button
+    if (orderLink.classList.contains('whatsapp-float') && !orderLink.hasAttribute('data-book-order')) {
+      return; // allow general helpline inquiry without forced login
+    }
+
+    const isExplicitOrder = orderLink.hasAttribute('data-book-order');
+    const href = orderLink.getAttribute('href') || '';
+    const text = ((orderLink.textContent || '') + ' ' + href).toLowerCase();
+    
+    // Check if this link is an order trigger
+    const isOrderTrigger = isExplicitOrder || 
+      text.includes('ऑर्डर') || 
+      text.includes('order') || 
+      text.includes('कॉम्बो') || 
+      text.includes('combo') ||
+      text.includes('250') ||
+      text.includes('200') ||
+      text.includes('450');
+
+    if (!isOrderTrigger) return;
+
+    // Determine auth state
+    let currentUser = null;
+    let studentSession = null;
+    try {
+      if (window.FirebaseAuth && typeof window.FirebaseAuth.getCurrentUser === 'function') {
+        currentUser = window.FirebaseAuth.getCurrentUser();
+      }
+    } catch (err) {}
+
+    try {
+      const raw = localStorage.getItem('bhaskar_student_session');
+      if (raw) studentSession = JSON.parse(raw);
+    } catch (err) {}
+
+    const isLoggedIn = !!(currentUser || (studentSession && studentSession.uid));
+
+    // Extract book info
+    let bookName = orderLink.getAttribute('data-book-name') || '';
+    let bookPrice = orderLink.getAttribute('data-book-price') || '';
+
+    if (!bookName) {
+      if (text.includes('कॉम्बो') || text.includes('450')) {
+        bookName = 'दोनों पुस्तकें कॉम्बो पैक';
+        bookPrice = '450';
+      } else if (text.includes('वस्तुनिष्ठ इतिहास') || text.includes('200')) {
+        bookName = 'हिन्दी साहित्य : वस्तुनिष्ठ इतिहास';
+        bookPrice = '200';
+      } else {
+        bookName = 'राजस्थान राजनीतिक एवं प्रशासनिक व्यवस्था';
+        bookPrice = '250';
+      }
+    }
+
+    if (!isLoggedIn) {
+      // User is NOT logged in -> Block WhatsApp and redirect to student-login.html
+      e.preventDefault();
+      e.stopPropagation();
+
+      const pendingOrder = {
+        book: bookName,
+        price: bookPrice,
+        originalUrl: href,
+        timestamp: Date.now()
+      };
+
+      try {
+        sessionStorage.setItem('pending_book_order', JSON.stringify(pendingOrder));
+        localStorage.setItem('pending_book_order', JSON.stringify(pendingOrder));
+      } catch (err) {}
+
+      alert('पुस्तक ऑर्डर करने के लिए कृपया पहले लॉगिन या नया रजिस्ट्रेशन (Sign-Up) करें।');
+      window.location.href = 'student-login.html?action=order&book=' + encodeURIComponent(bookName) + '&price=' + encodeURIComponent(bookPrice);
+      return false;
+    } else {
+      // User IS logged in -> Format WhatsApp message with student profile details
+      const studentName = (currentUser && currentUser.displayName) || (studentSession && studentSession.name) || 'विद्यार्थी';
+      const studentEmail = (currentUser && currentUser.email) || (studentSession && studentSession.email) || '';
+      const studentPhone = (currentUser && currentUser.phoneNumber) || (studentSession && studentSession.phone) || '';
+
+      const waMsg = encodeURIComponent(
+        'नमस्ते भास्कर क्लासेज,\n' +
+        'मैं पंजीकृत विद्यार्थी हूँ: ' + studentName + '\n' +
+        (studentPhone ? 'मोबाइल: ' + studentPhone + '\n' : '') +
+        (studentEmail ? 'ईमेल: ' + studentEmail + '\n' : '') +
+        'पुस्तक: ' + bookName + (bookPrice ? ' (₹' + bookPrice + ')' : '') + '\n' +
+        'कृपया मेरा पुस्तक ऑर्डर स्वीकार करें एवं डिलीवरी प्रक्रिया बताएं।'
+      );
+
+      orderLink.href = 'https://wa.me/918949287751?text=' + waMsg;
+    }
+  }, true);
 }
