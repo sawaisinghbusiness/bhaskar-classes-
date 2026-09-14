@@ -1787,17 +1787,24 @@ body:not(.portal-page):not(.admin-page) {
   display: block;
 }
 
-/* Combo Offer Banner */
+/* Combo Offer Banner - Clean Institutional Card Matching Test Series Banner */
 .combo-banner {
-  background-color: #1E2B58;
-  border-radius: 16px;
-  padding: 32px 40px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-top: 4px solid #1E2B58;
+  border-radius: 14px;
+  padding: 28px 34px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 32px;
-  box-shadow: 0 12px 32px -4px rgba(30, 43, 88, 0.18);
+  box-shadow: 0 10px 25px -5px rgba(30, 43, 88, 0.07), 0 4px 6px -4px rgba(30, 43, 88, 0.03);
   margin-top: 40px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.combo-banner:hover {
+  box-shadow: 0 14px 32px -5px rgba(30, 43, 88, 0.12), 0 6px 12px -4px rgba(30, 43, 88, 0.06);
 }
 
 .combo-banner-left {
@@ -1805,10 +1812,12 @@ body:not(.portal-page):not(.admin-page) {
 }
 
 .combo-banner-title {
-  color: #FFFFFF;
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin: 0 0 16px 0;
+  color: #1E2B58;
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin: 0 0 14px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #F1F5F9;
 }
 
 .combo-banner-features {
@@ -1817,70 +1826,107 @@ body:not(.portal-page):not(.admin-page) {
   margin: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(200px, 1fr));
-  gap: 10px 24px;
+  gap: 10px 20px;
 }
 
 .combo-banner-features li {
-  color: #CBD5E1;
-  font-size: 0.92rem;
+  color: #475569;
+  font-size: 0.95rem;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .combo-banner-features .dot {
-  color: #00A3E8;
-  font-weight: bold;
+  color: #059669;
+  font-weight: 800;
+  font-size: 1rem;
 }
 
 .combo-banner-right {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
 }
 
 .combo-price-card {
-  background: #FFFFFF;
-  padding: 14px 22px;
-  border-radius: 12px;
-  text-align: center;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  text-align: right;
   min-width: 140px;
 }
 
-.combo-price-label {
-  display: block;
-  font-size: 0.75rem;
-  color: #64748B;
-  font-weight: 600;
+.combo-price-badge {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  background: #EFF6FF;
+  border: 1.5px solid #BAE6FD;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(0, 163, 232, 0.08);
+  margin-bottom: 6px;
 }
 
+.combo-price-badge .combo-price-label,
+.combo-price-label {
+  display: inline-block;
+  font-size: 0.82rem;
+  color: #0284C7;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.combo-price-badge .combo-price-val,
 .combo-price-val {
-  font-size: 1.8rem;
+  font-size: 1.45rem;
   font-weight: 800;
-  color: #00A3E8;
-  line-height: 1.1;
-  margin: 2px 0;
+  color: #1E2B58;
+  line-height: 1;
+  margin: 0;
 }
 
 .combo-price-mrp {
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   color: #94A3B8;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.combo-price-mrp del {
+  color: #94A3B8;
+  font-size: 0.88rem;
 }
 
 .combo-price-mrp span {
-  color: #0284C7;
-  font-weight: 600;
+  background: #ECFDF5;
+  color: #047857;
+  border: 1px solid #A7F3D0;
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  text-decoration: none;
 }
 
 .combo-cta {
-  background-color: #00A3E8;
+  background-color: #059669;
   color: #FFFFFF;
-  font-weight: 600;
-  padding: 14px 22px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 13px 26px;
   border-radius: 8px;
   text-decoration: none;
   white-space: nowrap;
-  transition: background-color 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+  transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1888,29 +1934,46 @@ body:not(.portal-page):not(.admin-page) {
 }
 
 .combo-cta:hover {
-  background-color: #0284C7;
+  background-color: #047857;
   color: #FFFFFF;
   transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.35);
 }
 
 @media (max-width: 768px) {
   .combo-banner {
     flex-direction: column;
-    align-items: stretch;
-    padding: 24px;
+    text-align: center;
+    padding: 24px 18px;
     gap: 20px;
+  }
+  .combo-banner-left {
+    width: 100%;
   }
   .combo-banner-features {
     grid-template-columns: 1fr;
+    text-align: left;
+    gap: 8px;
   }
   .combo-banner-right {
     flex-direction: column;
     width: 100%;
-    gap: 12px;
+    gap: 16px;
   }
-  .combo-cta {
+  .combo-price-card {
     text-align: center;
     width: 100%;
+  }
+  .combo-price-badge {
+    margin: 0 auto 6px auto;
+  }
+  .combo-price-mrp {
+    justify-content: center;
+  }
+  .combo-cta {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
   }
 }
 
