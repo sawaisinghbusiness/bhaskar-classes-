@@ -34,26 +34,28 @@ function initDashboardTabs() {
   });
 }
 
-// 2. Top Header Logout Button
+// 2. Top Header Logout Button (Instant Logout, No Confirmation Popup)
 function initLogoutHandler() {
   const logoutBtn = document.getElementById('studentHeaderLogoutBtn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
-      if (confirm('क्या आप निश्चित रूप से विद्यार्थी पोर्टल से लॉगआउट करना चाहते हैं?')) {
-        try {
-          if (unsubscribeStudentDoc) {
-            unsubscribeStudentDoc();
-            unsubscribeStudentDoc = null;
-          }
-          await signOut(auth);
-          try {
-            localStorage.removeItem('bhaskar_student_session');
-          } catch (e) {}
-          window.location.href = 'student-login.html';
-        } catch (error) {
-          console.error('Logout error:', error);
-          alert('लॉगआउट में समस्या आई: ' + error.message);
+      try {
+        logoutBtn.disabled = true;
+        logoutBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> लॉगआउट...';
+        if (unsubscribeStudentDoc) {
+          unsubscribeStudentDoc();
+          unsubscribeStudentDoc = null;
         }
+        await signOut(auth);
+        try {
+          localStorage.removeItem('bhaskar_student_session');
+        } catch (e) {}
+        window.location.href = 'student-login.html';
+      } catch (error) {
+        console.error('Logout error:', error);
+        logoutBtn.disabled = false;
+        logoutBtn.innerHTML = '<i class="fa-solid fa-right-from-bracket mr-1"></i> लॉगआउट';
+        alert('लॉगआउट में समस्या आई: ' + error.message);
       }
     });
   }
