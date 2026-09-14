@@ -13,63 +13,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
   
-  <style>
-    .page-hero {
-      overflow-x: clip;
-      max-width: 100%;
-      background: linear-gradient(135deg, var(--color-primary) 0%, #162042 100%);
-      color: #ffffff;
-      padding: 3rem 0 2.5rem;
-      text-align: center;
-    }
-    .page-hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(0, 163, 232, 0.15);
-      color: var(--color-accent);
-      border: 1px solid rgba(0, 163, 232, 0.3);
-      padding: 4px 14px;
-      border-radius: var(--radius-pill);
-      font-size: 0.8125rem;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
-    }
-    .page-hero h1 {
-      font-size: 2.25rem;
-      font-weight: 800;
-      line-height: 1.25;
-      margin-bottom: 0.75rem;
-    }
-    .page-hero p {
-      font-size: 1rem;
-      color: #cbd5e1;
-      max-width: 680px;
-      margin: 0 auto;
-    }
-    .stats-strip {
-      background: #ffffff;
-      border-bottom: 1px solid var(--color-border);
-      padding: 1.25rem 0;
-      box-shadow: var(--shadow-sm);
-    }
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
-      gap: 1.5rem;
-      text-align: center;
-    }
-    .stat-num {
-      font-size: 1.75rem;
-      font-weight: 800;
-      color: var(--color-primary);
-    }
-    .stat-label {
-      font-size: 0.8125rem;
-      color: var(--color-text-muted);
-      font-weight: 600;
-    }
-  </style>
 </head>
 <body>
 
@@ -131,37 +74,63 @@
     </div>
   </header>
 
-  <!-- ==================== HERO BANNER ==================== -->
-  <section class="page-hero">
+  <!-- ==================== TOPPERS HERO & STATS SECTION ==================== -->
+  <section class="toppers-hero-section">
     <div class="container">
-      <h1>हमारे गौरव : Our Toppers 2024-25</h1>
-      <p>
-        “सपनों को लक्ष्य, लक्ष्य को सफलता” — R.R. Choudhary Sir के कुशल मार्गदर्शन में RPSC 1st एवं 2nd Grade हिंदी में प्रदेश भर में चयनित हमारे मेधावी विद्यार्थी।
-      </p>
+      <div class="toppers-header">
+        <span class="toppers-badge">
+          <i class="fa-solid fa-trophy"></i> परिणाम ही प्रमाण है • 2024-25
+        </span>
+        <h1 class="toppers-title">हमारे गौरव : Our Toppers 2024-25</h1>
+        <p class="toppers-subtitle">
+          “सपनों को लक्ष्य, लक्ष्य को सफलता” — R.R. Choudhary Sir के कुशल मार्गदर्शन में RPSC 1st एवं 2nd Grade हिंदी में प्रदेश भर में चयनित हमारे मेधावी विद्यार्थी।
+        </p>
+      </div>
+
+      <!-- Stats Grid (4 Metric Cards) -->
+      <div class="toppers-stats-grid">
+        <!-- Stat Card 1 -->
+        <div class="topper-stat-card">
+          <div class="stat-icon-wrap">
+            <i class="fa-solid fa-user-graduate"></i>
+          </div>
+          <div class="topper-stat-num">500+</div>
+          <div class="topper-stat-primary">अध्यापक एवं प्राध्यापक</div>
+          <div class="topper-stat-secondary">पद पर अंतिम चयन</div>
+        </div>
+
+        <!-- Stat Card 2 -->
+        <div class="topper-stat-card">
+          <div class="stat-icon-wrap">
+            <i class="fa-solid fa-medal"></i>
+          </div>
+          <div class="topper-stat-num highlight">Top Ranks</div>
+          <div class="topper-stat-primary">ऑल राजस्थान रैंकर्स</div>
+          <div class="topper-stat-secondary">1st, 2nd, 3rd एवं 4th रैंक</div>
+        </div>
+
+        <!-- Stat Card 3 -->
+        <div class="topper-stat-card">
+          <div class="stat-icon-wrap">
+            <i class="fa-solid fa-award"></i>
+          </div>
+          <div class="topper-stat-num">10+ वर्ष</div>
+          <div class="topper-stat-primary">सफल मार्गदर्शन</div>
+          <div class="topper-stat-secondary">गौरवशाली इतिहास (2015-2026)</div>
+        </div>
+
+        <!-- Stat Card 4 -->
+        <div class="topper-stat-card">
+          <div class="stat-icon-wrap">
+            <i class="fa-solid fa-map-location-dot"></i>
+          </div>
+          <div class="topper-stat-num">33+ जिले</div>
+          <div class="topper-stat-primary">राजस्थान भर में शिक्षक</div>
+          <div class="topper-stat-secondary">प्रत्येक जिले में कार्यरत</div>
+        </div>
+      </div>
     </div>
   </section>
-
-  <!-- ==================== STATS STRIP ==================== -->
-  <div class="stats-strip">
-    <div class="container stats-grid">
-      <div>
-        <div class="stat-num">500+</div>
-        <div class="stat-label">अध्यापक एवं प्राध्यापक पद पर अंतिम चयन</div>
-      </div>
-      <div>
-        <div class="stat-num">Top Ranks</div>
-        <div class="stat-label">ऑल राजस्थान 1st, 2nd, 3rd एवं 4th रैंक</div>
-      </div>
-      <div>
-        <div class="stat-num">10+ वर्ष</div>
-        <div class="stat-label">सफल मार्गदर्शन का गौरवशाली इतिहास (2015-2026)</div>
-      </div>
-      <div>
-        <div class="stat-num">33+ जिले</div>
-        <div class="stat-label">राजस्थान के प्रत्येक जिले में कार्यरत शिक्षक</div>
-      </div>
-    </div>
-  </div>
 
   <!-- ==================== MAIN TOPPERS CONTENT ==================== -->
   <main class="section">
