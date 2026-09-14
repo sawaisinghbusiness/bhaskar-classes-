@@ -17,35 +17,9 @@ import {
 } from "./firebase-config.js";
 
 document.addEventListener('DOMContentLoaded', () => {
-  checkPendingOrderPrompt();
   initAuthUI();
   initLoginAuthStateListener();
 });
-
-function checkPendingOrderPrompt() {
-  const params = new URLSearchParams(window.location.search);
-  const action = params.get('action');
-  const bookParam = params.get('book');
-  const priceParam = params.get('price');
-  
-  let orderData = null;
-  try {
-    const raw = sessionStorage.getItem('pending_book_order') || localStorage.getItem('pending_book_order');
-    if (raw) orderData = JSON.parse(raw);
-  } catch (e) {}
-
-  if (action === 'order' || orderData) {
-    const bookName = (orderData && orderData.book) || bookParam || 'मंदार पब्लिकेशन पुस्तक';
-    const bookPrice = (orderData && orderData.price) || priceParam || '';
-    
-    const banner = document.getElementById('orderPromptBanner');
-    const bookNameEl = document.getElementById('orderPromptBookName');
-    if (banner) banner.style.display = 'block';
-    if (bookNameEl) {
-      bookNameEl.innerHTML = 'चयनित पुस्तक: <strong>' + bookName + '</strong> ' + (bookPrice ? '(₹' + bookPrice + ')' : '');
-    }
-  }
-}
 
 function showAlert(message, type = 'error') {
   const alertBox = document.getElementById('authAlertBox');
