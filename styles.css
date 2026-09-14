@@ -1108,13 +1108,14 @@ body:not(.portal-page):not(.admin-page) {
 
 /* Test Series Promo Banner */
 .test-series-banner {
-  background-color: #1E2B58;
+  background: linear-gradient(135deg, #162042 0%, #1E2B58 100%);
+  border: 1px solid rgba(0, 163, 232, 0.3);
   border-radius: 16px;
-  padding: 32px 40px;
+  padding: 28px 36px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 32px;
+  gap: 24px;
   box-shadow: 0 12px 32px -4px rgba(30, 43, 88, 0.18);
   margin-top: 40px;
 }
@@ -1125,9 +1126,9 @@ body:not(.portal-page):not(.admin-page) {
 
 .banner-title {
   color: #FFFFFF;
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   font-weight: 700;
-  margin: 0 0 16px 0;
+  margin: 0 0 14px 0;
 }
 
 .banner-features {
@@ -1136,7 +1137,7 @@ body:not(.portal-page):not(.admin-page) {
   margin: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(200px, 1fr));
-  gap: 10px 24px;
+  gap: 10px 20px;
 }
 
 .banner-features li {
@@ -1149,32 +1150,33 @@ body:not(.portal-page):not(.admin-page) {
 
 .banner-features .dot {
   color: #00A3E8;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .banner-right {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 18px;
 }
 
 .banner-price-card {
-  background: #FFFFFF;
-  padding: 14px 22px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
+  padding: 12px 20px;
   text-align: center;
   min-width: 140px;
 }
 
 .price-label {
   display: block;
-  font-size: 0.75rem;
-  color: #64748B;
+  font-size: 0.78rem;
+  color: #94A3B8;
   font-weight: 600;
 }
 
 .price-val {
-  font-size: 1.8rem;
+  font-size: 1.85rem;
   font-weight: 800;
   color: #00A3E8;
   line-height: 1.1;
@@ -1182,20 +1184,23 @@ body:not(.portal-page):not(.admin-page) {
 }
 
 .price-mrp {
-  font-size: 0.75rem;
-  color: #94A3B8;
+  font-size: 0.78rem;
+  color: #64748B;
+  text-decoration: line-through;
 }
 
 .price-mrp span {
-  color: #0284C7;
+  color: #38BDF8;
   font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .banner-cta {
   background-color: #00A3E8;
   color: #FFFFFF;
   font-weight: 600;
-  padding: 14px 22px;
+  padding: 13px 22px;
   border-radius: 8px;
   text-decoration: none;
   white-space: nowrap;
@@ -1215,16 +1220,20 @@ body:not(.portal-page):not(.admin-page) {
   .test-series-banner {
     flex-direction: column;
     align-items: stretch;
-    padding: 24px;
+    padding: 22px;
     gap: 20px;
   }
   .banner-features {
     grid-template-columns: 1fr;
+    gap: 8px;
   }
   .banner-right {
     flex-direction: column;
     width: 100%;
-    gap: 12px;
+    gap: 14px;
+  }
+  .banner-price-card {
+    width: 100%;
   }
   .banner-cta {
     text-align: center;
