@@ -242,7 +242,6 @@ function initAuthUI() {
       const emailInput = document.getElementById('regEmail');
       const phoneInput = document.getElementById('regPhone');
       const passInput = document.getElementById('regPassword');
-      const goalSelect = document.getElementById('regGoal');
       const submitBtn = document.getElementById('emailRegisterSubmitBtn');
 
       if (!emailInput || !passInput) return;
@@ -250,7 +249,6 @@ function initAuthUI() {
       const email = emailInput.value.trim();
       const phone = phoneInput ? phoneInput.value.trim() : '';
       const password = passInput.value;
-      const goal = goalSelect ? goalSelect.value : 'RPSC वरिष्ठ अध्यापक (2nd Grade) हिंदी';
 
       if (password.length < 6) {
         showAlert('पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।', 'error');
@@ -274,7 +272,6 @@ function initAuthUI() {
           name: name,
           email: email,
           phone: phone,
-          targetExam: goal,
           hasTestSeriesAccess: false,
           hasEbooksAccess: false,
           bookOrders: [],

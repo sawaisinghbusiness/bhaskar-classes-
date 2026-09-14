@@ -71,11 +71,9 @@ function initProfileForm() {
       const saveBtn = document.getElementById('saveProfileBtn');
       const nameInput = document.getElementById('profName');
       const phoneInput = document.getElementById('profPhone');
-      const goalSelect = document.getElementById('profGoal');
 
       const newName = nameInput ? nameInput.value.trim() : '';
       const newPhone = phoneInput ? phoneInput.value.trim() : '';
-      const newGoal = goalSelect ? goalSelect.value : '';
 
       if (saveBtn) {
         saveBtn.disabled = true;
@@ -91,7 +89,6 @@ function initProfileForm() {
         await updateDoc(studentRef, {
           name: newName,
           phone: newPhone,
-          targetExam: newGoal,
           updatedAt: new Date().toISOString()
         });
 
@@ -251,12 +248,10 @@ function renderStudentDashboard(user, data) {
   // Header Elements
   const welcomeEl = document.getElementById('studentWelcomeName');
   const initialEl = document.getElementById('studentAvatarInitial');
-  const goalEl = document.getElementById('studentGoalDisplay');
   const phoneEl = document.getElementById('studentDisplayPhone');
   const idEl = document.getElementById('studentDisplayId');
 
   if (welcomeEl) welcomeEl.innerText = displayName;
-  if (goalEl) goalEl.innerText = `🎯 लक्ष्य: ${targetExam}`;
   if (phoneEl) {
     phoneEl.innerHTML = `<i class="fa-solid fa-envelope mr-1"></i> ${email} ${phone ? '• <i class="fa-solid fa-phone ml-1"></i> ' + phone : ''}`;
   }
@@ -271,11 +266,9 @@ function renderStudentDashboard(user, data) {
   // Profile form inputs
   const profName = document.getElementById('profName');
   const profPhone = document.getElementById('profPhone');
-  const profGoal = document.getElementById('profGoal');
 
   if (profName && !profName.matches(':focus')) profName.value = displayName;
   if (profPhone && !profPhone.matches(':focus')) profPhone.value = phone;
-  if (profGoal && !profGoal.matches(':focus')) profGoal.value = targetExam;
 
   // Tab 1: Books & Delivery Tracking
   const booksContainer = document.getElementById('studentBooksContainer');
