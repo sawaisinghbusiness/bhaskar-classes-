@@ -1178,22 +1178,35 @@ body:not(.portal-page):not(.admin-page) {
   min-width: 140px;
 }
 
-.price-label {
-  display: block;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-size: 0.75rem;
-  color: #64748B;
-  font-weight: 700;
-  margin-bottom: 2px;
+.price-badge {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  background: #EFF6FF;
+  border: 1.5px solid #BAE6FD;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(0, 163, 232, 0.08);
+  margin-bottom: 6px;
 }
 
+.price-badge .price-label,
+.price-label {
+  display: inline-block;
+  font-size: 0.82rem;
+  color: #0284C7;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.price-badge .price-val,
 .price-val {
-  font-size: 2.25rem;
+  font-size: 1.45rem;
   font-weight: 800;
   color: #1E2B58;
-  line-height: 1.1;
-  margin: 2px 0;
+  line-height: 1;
+  margin: 0;
 }
 
 .price-mrp {
@@ -1268,6 +1281,9 @@ body:not(.portal-page):not(.admin-page) {
   .banner-price-card {
     text-align: center;
     width: 100%;
+  }
+  .price-badge {
+    margin: 0 auto 6px auto;
   }
   .price-mrp {
     justify-content: center;
