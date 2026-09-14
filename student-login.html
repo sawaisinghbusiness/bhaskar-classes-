@@ -221,7 +221,6 @@
             <div class="tab-nav">
               <button class="tab-btn active" data-student-tab="tabBooks"><i class="fa-solid fa-truck"></i> मेरी पुस्तकें (Delivery Tracking)</button>
               <button class="tab-btn" data-student-tab="tabNotes"><i class="fa-solid fa-file-pdf"></i> ई-नोट्स व पुस्तकें</button>
-              <button class="tab-btn" data-student-tab="tabTests"><i class="fa-solid fa-clipboard-check"></i> टेस्ट सीरीज (Test Series)</button>
               <button class="tab-btn" data-student-tab="tabProfile"><i class="fa-solid fa-user-gear"></i> प्रोफ़ाइल विवरण</button>
             </div>
           </div>
@@ -262,18 +261,13 @@
                 </div>
               </div>
 
-              <!-- Locked Notice Banner (shown if no access) -->
-              <div id="ebooksLockedBanner" style="display: none; background-color: #fef2f2; border: 1.5px solid #fecaca; border-radius: var(--radius-card); padding: 1.5rem; text-align: center; margin-bottom: 1.5rem;">
-                <div style="width: 3.5rem; height: 3.5rem; background-color: #fee2e2; color: #dc2626; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 0.75rem;">
-                  <i class="fa-solid fa-lock"></i>
-                </div>
-                <h3 style="font-size: 1.15rem; font-weight: 800; color: #991b1b; margin-bottom: 0.35rem;">ई-नोट्स व ई-बुक्स एक्सेस अभी स्वीकृत नहीं है</h3>
-                <p style="font-size: 0.85rem; color: #7f1d1d; max-width: 550px; margin: 0 auto 1rem;">
-                  इस सुविधा को सक्रिय करने के लिए एडमिन अनुमोदन की आवश्यकता होती है। यदि आपने शुल्क का भुगतान कर दिया है तो कृपया संस्थान हेल्पलाइन पर संपर्क करें।
+              <!-- Clean Neutral Notice (shown if no ebooks available yet) -->
+              <div id="ebooksLockedBanner" style="display: none; background-color: var(--color-bg-alt); border: 1px dashed var(--color-border); border-radius: var(--radius-card); padding: 2.5rem 1.5rem; text-align: center; margin-bottom: 1.5rem;">
+                <i class="fa-solid fa-file-pdf" style="font-size: 2.25rem; color: #94A3B8; margin-bottom: 0.75rem;"></i>
+                <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.35rem;">No eBooks yet</h4>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); max-width: 450px; margin: 0 auto;">
+                  वर्तमान में कोई ई-बुक या डिजिटल नोट्स उपलब्ध नहीं हैं।
                 </p>
-                <a href="https://wa.me/918949287751?text=नमस्ते%20भास्कर%20क्लासेज,%20कृपया%20मेरे%20ई-नोट्स%20का%20एक्सेस%20चालू%20करें।" target="_blank" class="btn btn-primary" style="background-color: #dc2626; border-color: #dc2626;">
-                  <i class="fa-brands fa-whatsapp"></i> एडमिन से ई-बुक्स अनलॉक करवाएं
-                </a>
               </div>
 
               <!-- Unlocked E-books Content -->
@@ -314,47 +308,6 @@
                   </div>
                   <a href="https://sansa.page.link/oC8g" target="_blank" class="btn btn-sm btn-outline">
                     <i class="fa-solid fa-download"></i> डाउनलोड
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Tab 3: Test Series (Admin Permission Driven) -->
-            <div id="tabTests" class="tab-panel">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
-                <div>
-                  <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--color-primary); margin-bottom: 0.2rem;">ऑनलाइन टेस्ट सीरीज पोर्टल</h4>
-                  <p style="font-size: 0.8125rem; color: var(--color-text-muted);">RPSC 1st & 2nd Grade हिंदी उच्चस्तरीय ऑल राजस्थान टेस्ट</p>
-                </div>
-                <div id="testsAccessBadge">
-                  <!-- Loaded dynamically -->
-                </div>
-              </div>
-
-              <!-- Locked Notice Banner (shown if no access) -->
-              <div id="testsLockedBanner" style="display: none; background-color: #fef2f2; border: 1.5px solid #fecaca; border-radius: var(--radius-card); padding: 1.5rem; text-align: center; margin-bottom: 1.5rem;">
-                <div style="width: 3.5rem; height: 3.5rem; background-color: #fee2e2; color: #dc2626; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 0.75rem;">
-                  <i class="fa-solid fa-lock"></i>
-                </div>
-                <h3 style="font-size: 1.15rem; font-weight: 800; color: #991b1b; margin-bottom: 0.35rem;">टेस्ट सीरीज एक्सेस अभी स्वीकृत नहीं है</h3>
-                <p style="font-size: 0.85rem; color: #7f1d1d; max-width: 550px; margin: 0 auto 1rem;">
-                  एडमिन द्वारा आपके खाते के लिए टेस्ट सीरीज का एक्सेस सक्रिय करने के पश्चात आप सभी टेस्ट दे सकेंगे।
-                </p>
-                <a href="https://wa.me/918949287751?text=नमस्ते%20भास्कर%20क्लासेज,%20कृपया%20मेरी%20टेस्ट%20सीरीज%20सक्रिय%20करें।" target="_blank" class="btn btn-primary" style="background-color: #dc2626; border-color: #dc2626;">
-                  <i class="fa-brands fa-whatsapp"></i> टेस्ट सीरीज एक्सेस चालू करवाएं
-                </a>
-              </div>
-
-              <!-- Unlocked Tests Content -->
-              <div id="testsUnlockedContent" style="display: none; flex-direction: column; gap: 1rem;">
-                <div style="background-color: var(--color-bg-alt); border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
-                  <div>
-                    <span style="font-size: 0.6875rem; font-weight: 800; color: #ffffff; background-color: var(--color-success); padding: 0.15rem 0.5rem; border-radius: 4px;">सक्रिय टेस्ट सीरीज (Active)</span>
-                    <h4 style="font-size: 1.125rem; font-weight: 800; color: var(--color-primary); margin-top: 0.35rem;">RPSC वरिष्ठ अध्यापक एवं स्कूल व्याख्याता हिंदी टेस्ट सीरीज</h4>
-                    <p style="font-size: 0.8125rem; color: var(--color-text-muted);">टॉपिक वाइज टेस्ट + संपूर्ण पाठ्यक्रम 15 मेजर टेस्ट • ऑल राजस्थान रैंक विश्लेषण</p>
-                  </div>
-                  <a href="https://sansa.page.link/oC8g" target="_blank" class="btn btn-primary btn-lg">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> टेस्ट पोर्टल खोलें (Classplus App)
                   </a>
                 </div>
               </div>

@@ -596,7 +596,7 @@ function renderStudentDashboard(user, data) {
     }
   }
 
-  // Tab 2: E-Books Permission View
+  // Tab 2: E-Books View
   const ebooksLocked = document.getElementById('ebooksLockedBanner');
   const ebooksUnlocked = document.getElementById('ebooksUnlockedContent');
   const ebooksBadge = document.getElementById('ebooksAccessBadge');
@@ -608,21 +608,15 @@ function renderStudentDashboard(user, data) {
   } else {
     if (ebooksLocked) ebooksLocked.style.display = 'block';
     if (ebooksUnlocked) ebooksUnlocked.style.display = 'none';
-    if (ebooksBadge) ebooksBadge.innerHTML = '<span style="background: #fee2e2; color: #dc2626; font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 4px;"><i class="fa-solid fa-lock mr-1"></i> स्वीकृति अपेक्षित</span>';
+    if (ebooksBadge) ebooksBadge.innerHTML = '';
   }
 
-  // Tab 3: Test Series Permission View
+  // Tab 3: Test Series (if present)
   const testsLocked = document.getElementById('testsLockedBanner');
   const testsUnlocked = document.getElementById('testsUnlockedContent');
   const testsBadge = document.getElementById('testsAccessBadge');
 
-  if (data.hasTestSeriesAccess) {
-    if (testsLocked) testsLocked.style.display = 'none';
-    if (testsUnlocked) testsUnlocked.style.display = 'flex';
-    if (testsBadge) testsBadge.innerHTML = '<span style="background: var(--color-success-light); color: var(--color-success); font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 4px;"><i class="fa-solid fa-circle-check mr-1"></i> एडमिन द्वारा स्वीकृत</span>';
-  } else {
-    if (testsLocked) testsLocked.style.display = 'block';
-    if (testsUnlocked) testsUnlocked.style.display = 'none';
-    if (testsBadge) testsBadge.innerHTML = '<span style="background: #fee2e2; color: #dc2626; font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 4px;"><i class="fa-solid fa-lock mr-1"></i> स्वीकृति अपेक्षित</span>';
-  }
+  if (testsLocked) testsLocked.style.display = 'none';
+  if (testsUnlocked) testsUnlocked.style.display = 'none';
+  if (testsBadge) testsBadge.innerHTML = '';
 }
