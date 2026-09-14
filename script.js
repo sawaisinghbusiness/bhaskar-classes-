@@ -872,7 +872,7 @@ function initBookOrderAuthGate() {
     }
 
     if (!isLoggedIn) {
-      // User is NOT logged in -> Block WhatsApp and redirect to student-login.html
+      // User is NOT logged in -> Block WhatsApp and show custom in-app modal
       e.preventDefault();
       e.stopPropagation();
 
@@ -888,8 +888,7 @@ function initBookOrderAuthGate() {
         localStorage.setItem('pending_book_order', JSON.stringify(pendingOrder));
       } catch (err) {}
 
-      alert('पुस्तक ऑर्डर करने के लिए कृपया पहले लॉगिन या नया रजिस्ट्रेशन (Sign-Up) करें।');
-      window.location.href = 'student-login.html?action=order&book=' + encodeURIComponent(bookName) + '&price=' + encodeURIComponent(bookPrice);
+      showBookAuthModal(bookName, bookPrice);
       return false;
     } else {
       // User IS logged in -> Format WhatsApp message with student profile details
@@ -909,4 +908,74 @@ function initBookOrderAuthGate() {
       orderLink.href = 'https://wa.me/918949287751?text=' + waMsg;
     }
   }, true);
+}
+
+/**
+ * Modern In-App Modal for Book Order Authentication
+ */
+function showBookAuthModal(bookName, bookPrice) {
+  let modalOverlay = document.getElementById('bookAuthModalOverlay');
+  
+  if (!modalOverlay) {
+    modalOverlay = document.createElement('div');
+    modalOverlay.id = 'bookAuthModalOverlay';
+    modalOverlay.className = 'book-auth-modal-overlay';
+    modalOverlay.innerHTML = `
+      <div class="book-auth-modal-box" role="dialog" aria-modal="true">
+        <button type="button" class="book-auth-modal-close" id="bookAuthModalCloseBtn" aria-label="बंद करें">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="book-auth-modal-icon">
+          <i class="fa-solid fa-book-bookmark"></i>
+        </div>
+
+        <h3 class="book-auth-modal-title">विद्यार्थी लॉगिन आवश्यक है</h3>
+        <p class="book-auth-modal-desc">पुस्तक ऑर्डर करने एवं डिलीवरी ट्रैकिंग हेतु कृपया पहले लॉगिन या नया रजिस्ट्रेशन करें।</p>
+
+        <div class="book-auth-modal-bookname" id="bookAuthModalBookInfo">
+          <i class="fa-solid fa-circle-check" style="color: #16a34a;"></i>
+          <span></span>
+        </div>
+
+        <div class="book-auth-modal-actions">
+          <a id="bookAuthModalLoginBtn" href="student-login.html" class="btn btn-primary btn-full btn-lg" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <i class="fa-solid fa-right-to-bracket"></i> लॉगिन / नया रजिस्ट्रेशन करें
+          </a>
+          <button type="button" id="bookAuthModalCancelBtn" class="btn btn-outline btn-full btn-sm" style="color: #64748b; border-color: #cbd5e1;">
+            बाद में करें
+          </button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modalOverlay);
+
+    // Event listeners for close
+    modalOverlay.addEventListener('click', (ev) => {
+      if (ev.target === modalOverlay) {
+        modalOverlay.classList.remove('active');
+      }
+    });
+
+    const closeBtn = modalOverlay.querySelector('#bookAuthModalCloseBtn');
+    const cancelBtn = modalOverlay.querySelector('#bookAuthModalCancelBtn');
+    if (closeBtn) closeBtn.addEventListener('click', () => modalOverlay.classList.remove('active'));
+    if (cancelBtn) cancelBtn.addEventListener('click', () => modalOverlay.classList.remove('active'));
+  }
+
+  // Update dynamic book info and link
+  const bookInfoEl = modalOverlay.querySelector('#bookAuthModalBookInfo span');
+  if (bookInfoEl) {
+    bookInfoEl.innerText = bookName + (bookPrice ? ' (₹' + bookPrice + ')' : '');
+  }
+
+  const loginBtn = modalOverlay.querySelector('#bookAuthModalLoginBtn');
+  if (loginBtn) {
+    loginBtn.href = 'student-login.html?action=order&book=' + encodeURIComponent(bookName) + '&price=' + encodeURIComponent(bookPrice);
+  }
+
+  // Show modal with animation
+  requestAnimationFrame(() => {
+    modalOverlay.classList.add('active');
+  });
 }

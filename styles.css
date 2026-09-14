@@ -3835,3 +3835,119 @@ textarea.form-control {
     max-height: 220px;
   }
 }
+
+/* ==========================================================================
+   BOOK ORDER AUTH MODAL / POPUP
+   ========================================================================== */
+.book-auth-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 16px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.book-auth-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.book-auth-modal-box {
+  background: #ffffff;
+  border-radius: 16px;
+  max-width: 440px;
+  width: 100%;
+  padding: 24px;
+  box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.35);
+  position: relative;
+  transform: scale(0.92) translateY(10px);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+  border: 1px solid #e2e8f0;
+}
+
+.book-auth-modal-overlay.active .book-auth-modal-box {
+  transform: scale(1) translateY(0);
+}
+
+.book-auth-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #f1f5f9;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.book-auth-modal-close:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.book-auth-modal-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin: 0 auto 16px;
+  border: 2px solid #bfdbfe;
+}
+
+.book-auth-modal-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+  line-height: 1.35;
+}
+
+.book-auth-modal-desc {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.book-auth-modal-bookname {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: var(--color-primary);
+  font-weight: 700;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.book-auth-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
