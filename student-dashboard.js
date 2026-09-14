@@ -147,18 +147,39 @@ function handlePendingBookOrderExecution(user) {
   if (bannerContainer) {
     bannerContainer.style.display = 'block';
     bannerContainer.innerHTML = `
-      <div style="background: linear-gradient(135deg, #15803d 0%, #166534 100%); color: #ffffff; border-radius: 12px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 15px rgba(21,128,61,0.25); text-align: center; margin-bottom: 1rem;">
+      <div id="orderSuccessBannerCard" style="background: linear-gradient(135deg, #15803d 0%, #166534 100%); color: #ffffff; border-radius: 12px; padding: 1.25rem 1.5rem; box-shadow: 0 4px 15px rgba(21,128,61,0.25); text-align: center; margin-bottom: 1rem; position: relative; transition: all 0.3s ease;">
+        <button type="button" id="dismissOrderBannerBtn" aria-label="हटाएं" style="position: absolute; top: 10px; right: 12px; background: rgba(0,0,0,0.2); border: none; color: #ffffff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.875rem;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
         <div style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0.35rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
           <i class="fa-solid fa-circle-check" style="color: #4ade80;"></i> खाता प्रमाणित! आपका पुस्तक ऑर्डर तैयार है
         </div>
         <p style="font-size: 0.875rem; color: #dcfce7; margin-bottom: 1rem; line-height: 1.4;">
           <strong>${bookName} ${bookPrice ? '(' + bookPrice + ')' : ''}</strong> का ऑर्डर अपने विद्यार्थी विवरण के साथ व्हाट्सएप पर भेजने हेतु नीचे क्लिक करें:
         </p>
-        <a href="${waUrl}" target="_blank" class="btn" style="background-color: #25D366; color: #ffffff; font-weight: 800; font-size: 1rem; padding: 10px 24px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); text-decoration: none;">
+        <a id="orderWhatsAppActionBtn" href="${waUrl}" target="_blank" class="btn" style="background-color: #25D366; color: #ffffff; font-weight: 800; font-size: 1rem; padding: 10px 24px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); text-decoration: none;">
           <i class="fa-brands fa-whatsapp" style="font-size: 1.35rem;"></i> व्हाट्सएप पर ऑर्डर भेजें (8949287751) &rarr;
         </a>
       </div>
     `;
+
+    // Remove banner on clicking the whatsapp order button
+    const waBtn = document.getElementById('orderWhatsAppActionBtn');
+    if (waBtn) {
+      waBtn.addEventListener('click', () => {
+        bannerContainer.style.display = 'none';
+        bannerContainer.innerHTML = '';
+      });
+    }
+
+    // Remove banner on clicking the close (x) button
+    const closeBtn = document.getElementById('dismissOrderBannerBtn');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        bannerContainer.style.display = 'none';
+        bannerContainer.innerHTML = '';
+      });
+    }
   }
 
   try {
