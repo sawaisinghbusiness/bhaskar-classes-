@@ -197,7 +197,7 @@ function initAdminFirebaseListener() {
         if (setupView) setupView.style.display = 'none';
         if (dashboardView) dashboardView.style.display = 'none';
         const studentIdentifier = user.displayName || user.email || 'विद्यार्थी';
-        showAdminAlert(`आप वर्तमान में विद्यार्थी खाते (${studentIdentifier}) से लॉगिन हैं। एडमिन पैनल खोलने हेतु कृपया अधिकृत एडमिन ईमेल से लॉगिन करें।`, 'info');
+        showAdminAlert(`आप वर्तमान में विद्यार्थी खाते (<strong>${studentIdentifier}</strong>) से जुड़े हैं। एडमिन पोर्टल केवल अधिकृत संस्थान प्रशासक के लिए है।<br><a href="student.html" style="color: #0369a1; font-weight: 700; text-decoration: underline; margin-top: 6px; display: inline-block;"><i class="fa-solid fa-graduation-cap mr-1"></i> विद्यार्थी पोर्टल पर जाएं</a>`, 'info');
         return;
       }
 

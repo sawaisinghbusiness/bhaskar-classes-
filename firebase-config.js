@@ -7,6 +7,8 @@ import {
   getAuth, 
   onAuthStateChanged,
   signInWithPopup, 
+  signInWithRedirect,
+  getRedirectResult,
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -90,17 +92,24 @@ window.FirebaseAuth = {
   getCurrentUser: () => auth.currentUser
 };
 
-// Keep localStorage student session in sync with auth state
-onAuthStateChanged(auth, (user) => {
+// Keep localStorage student session in sync with auth state ONLY for actual students (never for admins)
+onAuthStateChanged(auth, async (user) => {
   if (user) {
     try {
-      localStorage.setItem('bhaskar_student_session', JSON.stringify({
-        uid: user.uid,
-        email: user.email || '',
-        name: user.displayName || (user.email ? user.email.split('@')[0] : 'विद्यार्थी'),
-        phone: user.phoneNumber || ''
-      }));
-    } catch (e) {}
+      const adminSnap = await getDoc(doc(db, "admins", user.uid));
+      if (!adminSnap.exists()) {
+        localStorage.setItem('bhaskar_student_session', JSON.stringify({
+          uid: user.uid,
+          email: user.email || '',
+          name: user.displayName || (user.email ? user.email.split('@')[0] : 'विद्यार्थी'),
+          phone: user.phoneNumber || ''
+        }));
+      } else {
+        localStorage.removeItem('bhaskar_student_session');
+      }
+    } catch (e) {
+      // Keep existing session on read error
+    }
   } else {
     try {
       localStorage.removeItem('bhaskar_student_session');
@@ -129,6 +138,8 @@ export {
   serverTimestamp,
   onAuthStateChanged,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,

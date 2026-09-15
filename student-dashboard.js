@@ -12,6 +12,8 @@ import {
   onSnapshot,
   onAuthStateChanged,
   signInWithPopup, 
+  signInWithRedirect,
+  getRedirectResult,
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
   sendPasswordResetEmail, 
@@ -26,6 +28,31 @@ document.addEventListener('DOMContentLoaded', () => {
   initProfileForm();
   initDashboardAuthListener();
 });
+
+// Helper: Ensure student profile exists in Firestore (students collection)
+async function ensureStudentDocumentExists(user) {
+  if (!user || !user.uid) return;
+  try {
+    const studentRef = doc(db, "students", user.uid);
+    const studentSnap = await getDoc(studentRef);
+
+    if (!studentSnap.exists()) {
+      await setDoc(studentRef, {
+        uid: user.uid,
+        name: user.displayName || 'विद्यार्थी',
+        email: user.email || '',
+        phone: user.phoneNumber || '',
+        targetExam: 'RPSC वरिष्ठ अध्यापक (2nd Grade) हिंदी',
+        hasTestSeriesAccess: false,
+        hasEbooksAccess: false,
+        bookOrders: [],
+        createdAt: new Date().toISOString()
+      });
+    }
+  } catch (err) {
+    console.warn('Firestore student doc sync note:', err);
+  }
+}
 
 // ================= AUTH UI & HELPERS =================
 function showAlert(message, type = 'error') {
@@ -76,9 +103,9 @@ function getHindiErrorMessage(errorCode) {
     case 'auth/cancelled-popup-request':
       return 'लॉगिन अनुरोध रद्द कर दिया गया।';
     case 'auth/popup-blocked':
-      return 'ब्राउज़र ने लॉगिन पॉपअप को ब्लॉक कर दिया। कृपया पॉपअप की अनुमति दें।';
+      return 'ब्राउज़र ने लॉगिन पॉपअप को ब्लॉक कर दिया। कृपया पॉपअप की अनुमति दें या पुनः प्रयास करें।';
     case 'auth/unauthorized-domain':
-      return 'यह डोमेन Firebase Authentication के लिए अधिकृत नहीं है।';
+      return 'यह डोमेन (' + window.location.hostname + ') Firebase Authentication के अधिकृत डोमेन (Authorized Domains) में पंजीकृत नहीं है। कृपया Firebase Console में इस डोमेन को जोड़ें।';
     case 'auth/network-request-failed':
       return 'नेटवर्क त्रुटि। कृपया अपना इंटरनेट कनेक्शन जांचें।';
     case 'auth/too-many-requests':
@@ -95,6 +122,18 @@ function initAuthUI() {
   const emailRegisterForm = document.getElementById('emailRegisterForm');
   const googleSignInBtn = document.getElementById('googleSignInBtn');
   const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+
+  // Handle mobile redirect sign-in result if returning from Google
+  getRedirectResult(auth).then(async (result) => {
+    if (result && result.user) {
+      await ensureStudentDocumentExists(result.user);
+    }
+  }).catch((err) => {
+    console.warn('Redirect sign-in notice:', err);
+    if (err && err.code) {
+      showAlert(getHindiErrorMessage(err.code), 'error');
+    }
+  });
 
   // Tab Switching (Login vs Register)
   if (tabBtnLogin && tabBtnRegister) {
@@ -143,7 +182,7 @@ function initAuthUI() {
     });
   });
 
-  // 1. Google Sign-In
+  // 1. Google Sign-In with Mobile Popup Fallback to Redirect
   if (googleSignInBtn) {
     googleSignInBtn.addEventListener('click', async () => {
       hideAlert();
@@ -152,27 +191,22 @@ function initAuthUI() {
       googleSignInBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Google से कनेक्ट हो रहा है...';
 
       try {
-        const userCredential = await signInWithPopup(auth, googleProvider);
-        const user = userCredential.user;
-
-        // Check/Create student document in Firestore
-        const studentRef = doc(db, "students", user.uid);
-        const studentSnap = await getDoc(studentRef);
-
-        if (!studentSnap.exists()) {
-          await setDoc(studentRef, {
-            uid: user.uid,
-            name: user.displayName || 'विद्यार्थी',
-            email: user.email,
-            phone: user.phoneNumber || '',
-            targetExam: 'RPSC वरिष्ठ अध्यापक (2nd Grade) हिंदी',
-            hasTestSeriesAccess: false,
-            hasEbooksAccess: false,
-            bookOrders: [],
-            createdAt: new Date().toISOString()
-          });
+        let user = null;
+        try {
+          const userCredential = await signInWithPopup(auth, googleProvider);
+          user = userCredential.user;
+        } catch (popupErr) {
+          // If popup blocked or cancelled on mobile, fallback to redirect
+          if (popupErr.code === 'auth/popup-blocked' || popupErr.code === 'auth/cancelled-popup-request' || popupErr.code === 'auth/popup-closed-by-user') {
+            await signInWithRedirect(auth, googleProvider);
+            return;
+          }
+          throw popupErr;
         }
-        // onAuthStateChanged will seamlessly switch view to dashboard!
+
+        if (user) {
+          await ensureStudentDocumentExists(user);
+        }
       } catch (error) {
         console.error('Google Sign-In Error:', error);
         showAlert(getHindiErrorMessage(error.code), 'error');
@@ -318,6 +352,8 @@ function initLogoutHandler() {
         await signOut(auth);
         try {
           localStorage.removeItem('bhaskar_student_session');
+          localStorage.removeItem('bhaskar_admin_logged_in');
+          sessionStorage.removeItem('bhaskar_portal_mode');
         } catch (e) {}
         // onAuthStateChanged will smoothly switch view to login form!
       } catch (error) {
@@ -483,14 +519,14 @@ function initDashboardAuthListener() {
     const loadingEl = document.getElementById('studentAuthLoading');
     const loginView = document.getElementById('studentLoginView');
     const dashboardView = document.getElementById('studentDashboardView');
+    const adminNoticeView = document.getElementById('studentAdminNoticeView');
     const logoutBtn = document.getElementById('studentHeaderLogoutBtn');
-    const adminBanner = document.getElementById('adminModeBanner');
 
     // Hide loader immediately once Firebase has resolved auth state
     if (loadingEl) loadingEl.style.display = 'none';
 
     if (!user) {
-      // User is not logged in -> Show login view seamlessly
+      // User is not logged in -> Show student login view seamlessly
       if (unsubscribeStudentDoc) {
         unsubscribeStudentDoc();
         unsubscribeStudentDoc = null;
@@ -500,13 +536,66 @@ function initDashboardAuthListener() {
       } catch (e) {}
 
       if (logoutBtn) logoutBtn.style.display = 'none';
-      if (adminBanner) adminBanner.style.display = 'none';
+      if (adminNoticeView) adminNoticeView.style.display = 'none';
       if (dashboardView) dashboardView.style.display = 'none';
       if (loginView) loginView.style.display = 'block';
       return;
     }
 
-    // User is logged in! -> Show dashboard view seamlessly
+    // User is logged in! Now check role: Is this an Admin account?
+    let isAdmin = false;
+    try {
+      const adminDocRef = doc(db, "admins", user.uid);
+      const adminDocSnap = await getDoc(adminDocRef);
+      isAdmin = adminDocSnap.exists();
+    } catch (e) {
+      console.warn("Role check error:", e);
+    }
+
+    if (isAdmin) {
+      // THIS IS AN ADMIN ACCOUNT!
+      // NEVER show the student dashboard with admin credentials!
+      if (unsubscribeStudentDoc) {
+        unsubscribeStudentDoc();
+        unsubscribeStudentDoc = null;
+      }
+      try {
+        localStorage.removeItem('bhaskar_student_session');
+      } catch (e) {}
+
+      if (loginView) loginView.style.display = 'none';
+      if (dashboardView) dashboardView.style.display = 'none';
+      if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+
+      if (adminNoticeView) {
+        const emailEl = document.getElementById('studentAdminNoticeEmail');
+        if (emailEl) emailEl.innerText = user.email || 'Admin';
+        adminNoticeView.style.display = 'block';
+
+        const switchBtn = document.getElementById('adminSwitchToStudentBtn');
+        if (switchBtn) {
+          switchBtn.onclick = async () => {
+            switchBtn.disabled = true;
+            switchBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> लॉगआउट हो रहा है...';
+            try {
+              await signOut(auth);
+              localStorage.removeItem('bhaskar_student_session');
+              localStorage.removeItem('bhaskar_admin_logged_in');
+            } catch (err) {
+              console.error('Sign out error:', err);
+            } finally {
+              switchBtn.disabled = false;
+              switchBtn.innerHTML = '<i class="fa-solid fa-right-from-bracket mr-1"></i> एडमिन से लॉगआउट करें एवं विद्यार्थी लॉगिन करें';
+            }
+          };
+        }
+      }
+      return;
+    }
+
+    // USER IS A REAL STUDENT!
+    if (adminNoticeView) adminNoticeView.style.display = 'none';
+
     try {
       localStorage.setItem('bhaskar_student_session', JSON.stringify({
         uid: user.uid,
@@ -519,19 +608,6 @@ function initDashboardAuthListener() {
     if (loginView) loginView.style.display = 'none';
     if (dashboardView) dashboardView.style.display = 'block';
     if (logoutBtn) logoutBtn.style.display = 'inline-flex';
-
-    // Check if user is an authorized admin -> Show admin banner inside student view (NO auto-redirect)
-    try {
-      const adminDocRef = doc(db, "admins", user.uid);
-      const adminDocSnap = await getDoc(adminDocRef);
-      if (adminDocSnap.exists() && adminBanner) {
-        adminBanner.style.display = 'flex';
-      } else if (adminBanner) {
-        adminBanner.style.display = 'none';
-      }
-    } catch (e) {
-      if (adminBanner) adminBanner.style.display = 'none';
-    }
 
     // Execute pending order if any
     handlePendingBookOrderExecution(user);
