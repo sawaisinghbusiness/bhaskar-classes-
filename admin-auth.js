@@ -301,6 +301,16 @@ function loadStudentsRealtime() {
   }
 }
 
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // Real-time listener for Firestore inquiries (Website leads)
 function loadInquiriesRealtime() {
   const inquiryTbody = document.getElementById('adminInquiryTableBody');
@@ -340,24 +350,31 @@ function loadInquiriesRealtime() {
         }
 
         inquiryTbody.innerHTML = inquiriesList.map(lead => {
-          const dateStr = lead.date || (lead.createdAt ? new Date(lead.createdAt).toLocaleDateString('hi-IN') : 'आज');
+          const rawDate = lead.date || (lead.createdAt ? new Date(lead.createdAt).toLocaleDateString('hi-IN') : 'आज');
           const cleanPhone = (lead.phone || '').replace(/\D/g, '');
+          const safeName = escapeHtml(lead.name || 'अज्ञात');
+          const safeMessage = escapeHtml(lead.message || '');
+          const safePhone = escapeHtml(lead.phone || '--');
+          const safeCourse = escapeHtml(lead.course || 'सामान्य पूछताछ');
+          const safeCity = escapeHtml(lead.city || 'बाड़मेर');
+          const safeDate = escapeHtml(rawDate);
+
           return `
             <tr>
               <td>
-                <div style="font-weight: 700; color: var(--color-primary);">${lead.name || 'अज्ञात'}</div>
-                ${lead.message ? `<div style="font-size: 0.75rem; color: #64748b;">"${lead.message}"</div>` : ''}
+                <div style="font-weight: 700; color: var(--color-primary);">${safeName}</div>
+                ${safeMessage ? `<div style="font-size: 0.75rem; color: #64748b;">"${safeMessage}"</div>` : ''}
               </td>
               <td>
-                <strong style="color: #334155;">${lead.phone || '--'}</strong>
+                <strong style="color: #334155;">${safePhone}</strong>
               </td>
               <td>
                 <span style="font-size: 0.8rem; background: #FEF3C7; color: #92400E; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
-                  ${lead.course || 'सामान्य पूछताछ'}
+                  ${safeCourse}
                 </span>
               </td>
-              <td>${lead.city || 'बाड़मेर'}</td>
-              <td>${dateStr}</td>
+              <td>${safeCity}</td>
+              <td>${safeDate}</td>
               <td style="text-align: right;">
                 <a href="https://wa.me/91${cleanPhone}?text=नमस्ते%20${encodeURIComponent(lead.name || '')},%20भास्कर%20क्लासेज%20बाड़मेर%20से%20संपर्क%20कर%20रहे%20हैं।" target="_blank" class="btn btn-sm btn-outline" style="color: #16a34a; border-color: #bbf7d0;">
                   <i class="fa-brands fa-whatsapp"></i> चैट
@@ -395,11 +412,12 @@ function renderStudentsTable(students) {
   }
 
   tableBody.innerHTML = students.map((student) => {
-    const uid = student.id || student.uid;
-    const name = student.name || 'नाम दर्ज नहीं';
-    const email = student.email || '--';
-    const phone = student.phone || 'उपलब्ध नहीं';
-    const goal = student.targetExam || '2nd Grade हिंदी';
+    const rawUid = student.id || student.uid || '';
+    const safeUid = escapeHtml(rawUid);
+    const safeName = escapeHtml(student.name || 'नाम दर्ज नहीं');
+    const safeEmail = escapeHtml(student.email || '--');
+    const safePhone = escapeHtml(student.phone || 'उपलब्ध नहीं');
+    const safeGoal = escapeHtml(student.targetExam || '2nd Grade हिंदी');
     const hasEbooks = !!student.hasEbooksAccess;
     const hasTests = !!student.hasTestSeriesAccess;
 
@@ -411,28 +429,33 @@ function renderStudentsTable(students) {
       trackingNo: ''
     };
 
-    const isDelivered = latestOrder.status && (latestOrder.status.includes('डिस्पैच') || latestOrder.status.includes('डिलीवर'));
-    const badgeBg = isDelivered ? '#DCFCE7' : (latestOrder.status === 'कोई ऑर्डर नहीं' ? '#F1F5F9' : '#FEF3C7');
-    const badgeColor = isDelivered ? '#15803D' : (latestOrder.status === 'कोई ऑर्डर नहीं' ? '#64748B' : '#B45309');
+    const safeBookTitle = escapeHtml(latestOrder.bookTitle || 'कोई पुस्तक नहीं');
+    const safeTrackingNo = escapeHtml(latestOrder.trackingNo || '');
+    const rawStatus = latestOrder.status || 'कोई ऑर्डर नहीं';
+    const safeStatus = escapeHtml(rawStatus);
+
+    const isDelivered = rawStatus.includes('डिस्पैच') || rawStatus.includes('डिलीवर');
+    const badgeBg = isDelivered ? '#DCFCE7' : (rawStatus === 'कोई ऑर्डर नहीं' ? '#F1F5F9' : '#FEF3C7');
+    const badgeColor = isDelivered ? '#15803D' : (rawStatus === 'कोई ऑर्डर नहीं' ? '#64748B' : '#B45309');
 
     return `
-      <tr id="row-student-${uid}">
+      <tr id="row-student-${safeUid}">
         <td>
-          <div style="font-weight: 700; color: var(--color-primary); font-size: 0.95rem;">${name}</div>
-          <div style="font-size: 0.75rem; color: var(--color-text-muted); font-family: monospace;">${email}</div>
-          <div style="font-size: 0.7rem; color: #64748B;">UID: <code>${uid.substring(0, 8)}</code></div>
+          <div style="font-weight: 700; color: var(--color-primary); font-size: 0.95rem;">${safeName}</div>
+          <div style="font-size: 0.75rem; color: var(--color-text-muted); font-family: monospace;">${safeEmail}</div>
+          <div style="font-size: 0.7rem; color: #64748B;">UID: <code>${safeUid.substring(0, 8)}</code></div>
         </td>
         <td>
-          <div style="font-weight: 600; color: #334155; font-size: 0.85rem;"><i class="fa-solid fa-phone mr-1" style="color: var(--color-primary); font-size: 0.75rem;"></i> ${phone}</div>
-          <span style="font-size: 0.72rem; color: #b45309; background: #fef3c7; padding: 0.15rem 0.4rem; border-radius: 4px; display: inline-block; margin-top: 0.2rem;">${goal}</span>
+          <div style="font-weight: 600; color: #334155; font-size: 0.85rem;"><i class="fa-solid fa-phone mr-1" style="color: var(--color-primary); font-size: 0.75rem;"></i> ${safePhone}</div>
+          <span style="font-size: 0.72rem; color: #b45309; background: #fef3c7; padding: 0.15rem 0.4rem; border-radius: 4px; display: inline-block; margin-top: 0.2rem;">${safeGoal}</span>
         </td>
         <td>
-          <div style="font-weight: 600; color: #1e293b; font-size: 0.85rem;">${latestOrder.bookTitle || 'कोई पुस्तक नहीं'}</div>
-          ${latestOrder.trackingNo ? `<div style="font-size: 0.72rem; color: #0284c7; font-family: monospace;">ट्रैकिंग: <strong>${latestOrder.trackingNo}</strong></div>` : ''}
+          <div style="font-weight: 600; color: #1e293b; font-size: 0.85rem;">${safeBookTitle}</div>
+          ${safeTrackingNo ? `<div style="font-size: 0.72rem; color: #0284c7; font-family: monospace;">ट्रैकिंग: <strong>${safeTrackingNo}</strong></div>` : ''}
         </td>
         <td>
           <span style="font-size: 0.78rem; font-weight: 700; background: ${badgeBg}; color: ${badgeColor}; padding: 0.2rem 0.6rem; border-radius: 4px; display: inline-block;">
-            <i class="fa-solid ${isDelivered ? 'fa-check' : 'fa-clock'} mr-1"></i> ${latestOrder.status || 'कोई ऑर्डर नहीं'}
+            <i class="fa-solid ${isDelivered ? 'fa-check' : 'fa-clock'} mr-1"></i> ${safeStatus}
           </span>
         </td>
         <td>
@@ -446,7 +469,7 @@ function renderStudentsTable(students) {
           </div>
         </td>
         <td style="text-align: right;">
-          <button type="button" onclick="window.openManageStudentModal('${uid}')" class="btn btn-sm btn-primary" style="white-space: nowrap; font-size: 0.78rem; font-weight: 600;">
+          <button type="button" onclick="window.openManageStudentModal('${safeUid}')" class="btn btn-sm btn-primary" style="white-space: nowrap; font-size: 0.78rem; font-weight: 600;">
             <i class="fa-solid fa-pen-to-square mr-1"></i> पुस्तक व ई-बुक्स प्रबंधित करें
           </button>
         </td>

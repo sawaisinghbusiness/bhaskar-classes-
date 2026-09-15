@@ -643,9 +643,19 @@ function initDashboardAuthListener() {
   });
 }
 
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // 6. Render Dashboard Data
 function renderStudentDashboard(user, data) {
-  const displayName = data.name || user.displayName || user.email.split('@')[0];
+  const displayName = data.name || user.displayName || (user.email ? user.email.split('@')[0] : 'विद्यार्थी');
   const email = data.email || user.email || '';
   const phone = data.phone || '';
   const targetExam = data.targetExam || 'RPSC 2nd Grade हिंदी';
@@ -658,7 +668,7 @@ function renderStudentDashboard(user, data) {
 
   if (welcomeEl) welcomeEl.innerText = displayName;
   if (phoneEl) {
-    phoneEl.innerHTML = `<i class="fa-solid fa-envelope mr-1"></i> ${email} ${phone ? '• <i class="fa-solid fa-phone ml-1"></i> ' + phone : ''}`;
+    phoneEl.innerHTML = `<i class="fa-solid fa-envelope mr-1"></i> ${escapeHtml(email)} ${phone ? '• <i class="fa-solid fa-phone ml-1"></i> ' + escapeHtml(phone) : ''}`;
   }
   if (idEl) idEl.innerHTML = '';
 
@@ -692,24 +702,32 @@ function renderStudentDashboard(user, data) {
       `;
     } else {
       booksContainer.innerHTML = orders.map((order, idx) => {
-        const isDelivered = order.status && (order.status.includes('डिस्पैच') || order.status.includes('डिलीवर'));
+        const rawStatus = order.status || 'ऑर्डर प्राप्त';
+        const isDelivered = rawStatus.includes('डिस्पैच') || rawStatus.includes('डिलीवर');
         const badgeBg = isDelivered ? 'var(--color-success-light)' : '#fff7ed';
         const badgeColor = isDelivered ? 'var(--color-success)' : 'var(--color-accent)';
+
+        const safeOrderId = escapeHtml(order.orderId || ('BK-' + (1000 + idx)));
+        const safeStatus = escapeHtml(rawStatus);
+        const safeBookTitle = escapeHtml(order.bookTitle || 'मंदार पब्लिकेशन हिंदी पुस्तक');
+        const safeTrackingNo = escapeHtml(order.trackingNo || 'प्रतीक्षारत (Pending)');
+        const safeAddress = escapeHtml(order.address || 'उपलब्ध नहीं');
+
         return `
           <div style="background-color: var(--color-bg-alt); border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: 1.25rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
-              <span style="font-size: 0.8125rem; font-weight: 700; color: var(--color-primary);">ऑर्डर आईडी: #${order.orderId || ('BK-' + (1000 + idx))}</span>
+              <span style="font-size: 0.8125rem; font-weight: 700; color: var(--color-primary);">ऑर्डर आईडी: #${safeOrderId}</span>
               <span style="font-size: 0.6875rem; font-weight: 700; color: ${badgeColor}; background-color: ${badgeBg}; padding: 0.25rem 0.65rem; border-radius: 4px;">
-                <i class="fa-solid fa-truck-fast mr-1"></i> ${order.status || 'ऑर्डर प्राप्त'}
+                <i class="fa-solid fa-truck-fast mr-1"></i> ${safeStatus}
               </span>
             </div>
-            <h3 style="font-size: 1.05rem; font-weight: 800; color: var(--color-primary);">${order.bookTitle || 'मंदार पब्लिकेशन हिंदी पुस्तक'}</h3>
+            <h3 style="font-size: 1.05rem; font-weight: 800; color: var(--color-primary);">${safeBookTitle}</h3>
             <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.25rem;">
               डिलीवरी प्रकार: भारतीय डाक स्पीड पोस्ट
             </p>
             <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--color-border); font-size: 0.8rem; color: #334155; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-              <span>डाक ट्रैकिंग नंबर: <strong style="font-family: monospace; color: var(--color-primary); background: #e0f2fe; padding: 2px 6px; border-radius: 4px;">${order.trackingNo || 'प्रतीक्षारत (Pending)'}</strong></span>
-              <span>डिलीवरी पता: <strong>${order.address || 'उपलब्ध नहीं'}</strong></span>
+              <span>डाक ट्रैकिंग नंबर: <strong style="font-family: monospace; color: var(--color-primary); background: #e0f2fe; padding: 2px 6px; border-radius: 4px;">${safeTrackingNo}</strong></span>
+              <span>डिलीवरी पता: <strong>${safeAddress}</strong></span>
             </div>
           </div>
         `;

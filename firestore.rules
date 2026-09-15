@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // 1. Admins Collection
+    // CRITICAL: Prevent unauthorized privilege escalation!
+    // No user can create or update admin documents from client SDK.
+    // Self-check is permitted so verified admins can access panel.
+    match /admins/{adminId} {
+      allow get: if isAuthenticated() && (request.auth.uid == adminId || isAdmin());
+      allow list: if isAdmin();
+      allow write: if false; // Only manageable through Firebase Console or Admin SDK
+    }
+
+    // 2. Students Collection
+    // Students can only read/write their own document.
+    // Admins can read and update all student documents.
+    match /students/{studentId} {
+      // Read: Student can read their own profile, Admin can read all
+      allow get: if isOwner(studentId) || isAdmin();
+      allow list: if isAdmin();
+
+      // Create: Student creates their own document upon registration
+      // Cannot self-grant ebooks or test series access!
+      allow create: if isOwner(studentId)
+                    && request.resource.data.uid == studentId
+                    && request.resource.data.hasEbooksAccess == false
+                    && request.resource.data.hasTestSeriesAccess == false;
+
+      // Update:
+      // - Admin can update any field (e.g. grant access, update tracking, manage orders)
+      // - Student can ONLY update their personal name and phone; CANNOT alter permissions or orders!
+      allow update: if isAdmin() || (
+        isOwner(studentId)
+        && request.resource.data.hasEbooksAccess == resource.data.hasEbooksAccess
+        && request.resource.data.hasTestSeriesAccess == resource.data.hasTestSeriesAccess
+        && request.resource.data.bookOrders == resource.data.bookOrders
+      );
+
+      // Delete: Strictly Admin only
+      allow delete: if isAdmin();
+    }
+
+    // 3. Inquiries Collection (Website leads)
+    // Public visitors can submit an inquiry with valid fields.
+    // Only verified admins can read, list, update, or delete inquiries.
+    match /inquiries/{inquiryId} {
+      allow create: if request.resource.data.name is string
+                    && request.resource.data.phone is string
+                    && request.resource.data.name.size() > 0
+                    && request.resource.data.name.size() <= 100
+                    && request.resource.data.phone.size() >= 10
+                    && request.resource.data.phone.size() <= 15;
+      allow read, list, update, delete: if isAdmin();
+    }
+
+    // Deny all other unmatched collections by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -28,9 +28,17 @@ const server = http.createServer((req, res) => {
     reqPath = '/index.html';
   }
 
+  // Prevent dotfile leakage (e.g. .git, .env, hidden files)
+  const segments = reqPath.split('/');
+  if (segments.some(seg => seg.startsWith('.') && seg !== '.' && seg !== '..')) {
+    res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('403 Forbidden: Access to hidden resources is blocked');
+    return;
+  }
+
   const safePath = path.normalize(path.join(PUBLIC_DIR, reqPath));
   if (!safePath.startsWith(PUBLIC_DIR)) {
-    res.writeHead(403, { 'Content-Type': 'text/plain' });
+    res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
     res.end('403 Forbidden');
     return;
   }
@@ -42,7 +50,7 @@ const server = http.createServer((req, res) => {
         if (!err2 && stats2.isFile()) {
           serveFile(htmlPath, res);
         } else {
-          res.writeHead(404, { 'Content-Type': 'text/plain' });
+          res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
           res.end('404 Not Found: ' + reqPath);
         }
       });
@@ -59,13 +67,15 @@ function serveFile(filePath, res) {
   res.writeHead(200, {
     'Content-Type': contentType,
     'Cache-Control': 'no-cache',
-    'Access-Control-Allow-Origin': '*'
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'SAMEORIGIN',
+    'Referrer-Policy': 'strict-origin-when-cross-origin'
   });
 
   const stream = fs.createReadStream(filePath);
   stream.on('error', () => {
     if (!res.headersSent) {
-      res.writeHead(500, { 'Content-Type': 'text/plain' });
+      res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
     }
     res.end('500 Internal Server Error');
   });

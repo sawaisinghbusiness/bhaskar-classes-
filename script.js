@@ -535,8 +535,19 @@ function initInquiryForm() {
   const form = document.getElementById('inquiryForm');
   if (!form) return;
 
-  form.addEventListener('submit', (e) => {
+  let isSubmitting = false;
+  let lastSubmitTime = 0;
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    const now = Date.now();
+    if (now - lastSubmitTime < 5000) {
+      alert('कृपया कुछ सेकंड प्रतीक्षा करें। आपका पिछला अनुरोध पहले ही दर्ज हो चुका है।');
+      return;
+    }
+
+    if (isSubmitting) return;
 
     const name = document.getElementById('inqName').value.trim();
     const phone = document.getElementById('inqPhone').value.trim();
@@ -544,8 +555,8 @@ function initInquiryForm() {
     const city = document.getElementById('inqCity') ? document.getElementById('inqCity').value.trim() : 'बाड़मेर';
     const msg = document.getElementById('inqMessage') ? document.getElementById('inqMessage').value.trim() : '';
 
-    if (!name) {
-      alert('कृपया अपना नाम दर्ज करें।');
+    if (!name || name.length < 2) {
+      alert('कृपया अपना पूरा नाम दर्ज करें।');
       return;
     }
 
@@ -557,6 +568,15 @@ function initInquiryForm() {
     if (!course) {
       alert('कृपया किसी कोर्स या पुस्तक का चयन करें।');
       return;
+    }
+
+    isSubmitting = true;
+    lastSubmitTime = now;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> दर्ज किया जा रहा है...';
     }
 
     // Save lead to LocalStorage as immediate local backup
@@ -575,26 +595,12 @@ function initInquiryForm() {
     localStorage.setItem('bhaskar_inquiries', JSON.stringify(inquiries));
 
     // Also write directly to Firebase Firestore "inquiries" collection
-    if (window.FirebaseAuth && window.FirebaseAuth.db && typeof window.FirebaseAuth.addDoc === 'function') {
-      try {
-        const { collection } = window.FirebaseAuth;
-        // fallback if collection not directly on FirebaseAuth
-        import("./firebase-config.js").then(async ({ db, collection, addDoc }) => {
-          await addDoc(collection(db, "inquiries"), lead);
-          console.log("Lead successfully synced to Firestore inquiries!");
-        }).catch(err => {
-          console.warn("Firestore lead sync warning:", err.message);
-        });
-      } catch (err) {
-        console.warn("Firestore sync warning:", err);
-      }
-    } else {
-      import("./firebase-config.js").then(async ({ db, collection, addDoc }) => {
-        await addDoc(collection(db, "inquiries"), lead);
-        console.log("Lead successfully synced to Firestore inquiries!");
-      }).catch(err => {
-        console.warn("Firestore lead sync warning:", err.message);
-      });
+    try {
+      const { db, collection, addDoc } = await import("./firebase-config.js");
+      await addDoc(collection(db, "inquiries"), lead);
+      console.log("Lead successfully synced to Firestore inquiries!");
+    } catch (err) {
+      console.warn("Firestore lead sync warning:", err.message);
     }
 
     // Open WhatsApp with prefilled message to Bhaskar Classes Helpline
@@ -620,6 +626,11 @@ function initInquiryForm() {
     }
 
     form.reset();
+    isSubmitting = false;
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnHtml;
+    }
   });
 }
 
